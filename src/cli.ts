@@ -1,8 +1,9 @@
 import process from 'node:process';
 import {fileURLToPath} from 'node:url';
 import {dirname} from 'node:path';
+import debug from 'debug';
 import glob from 'fast-glob';
-import {getMachine, isRomFolder} from './libretro.js';
+import {isRomFolder, scrapeFolder} from './libretro.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -13,11 +14,17 @@ export async function run(arguments_: string[] = process.argv) {
     process.exit(1);
   }
 
+  if (arguments_.includes('--verbose')) {
+    debug.enable('*');
+  }
+
   const targetPath = arguments__[0];
   process.chdir(targetPath);
-  // List all folders in the current directory using fast-glob
-  const files = (await glob(['*'], {onlyDirectories: true})).filter(isRomFolder);
-  console.log(files);
 
-  await getMachine(targetPath);
+  const folders = (await glob(['*'], {onlyDirectories: true})).filter(isRomFolder);
+  for (const folder of folders) {
+    debug(`Scraping folder: ${folder}`);
+    await scrapeFolder(folder);
+    debug('--------------------------------');
+  }
 }

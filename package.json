@@ -26,8 +26,14 @@
     "node": ">=20.0.0",
     "npm": ">=10.0.0"
   },
-  "devDependencies": {
+  "dependencies": {
+    "debug": "^4.4.0",
     "dotenv": "^16.4.7",
+    "fast-glob": "^3.3.3",
+    "jimp": "^1.6.0"
+  },
+  "devDependencies": {
+    "@types/debug": "^4.1.12",
     "xo": "^0.60.0"
   },
   "xo": {
@@ -42,9 +48,5 @@
   },
   "files": [
     "lib"
-  ],
-  "dependencies": {
-    "fast-glob": "^3.3.3",
-    "npm": "^11.1.0"
-  }
+  ]
 }
