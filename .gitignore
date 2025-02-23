@@ -5,3 +5,4 @@ lib/
 Thumbs.db
 .env*
 _old*
+/test/**/*.png

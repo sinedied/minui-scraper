@@ -1,6 +1,7 @@
 import path from "node:path";
 import createDebug from "debug";
 import glob from "fast-glob";
+import { resizeImageTo } from "./image.js";
 
 const debug = createDebug("command");
 
@@ -10,14 +11,16 @@ export type Machine = {
   fallbacks?: string[];
 };
 
-export type MachineCache = {
-  [key: string]: {
+export type MachineCache = Record<
+  string,
+  {
     boxarts?: string[];
     snaps?: string[];
     titles?: string[];
-  };
-};
+  }
+>;
 
+const resFolder = ".res";
 const baseUrl = "https://thumbnails.libretro.com/";
 const boxartPath = "Named_Boxarts";
 const snapPath = "Named_Snaps";
@@ -100,6 +103,8 @@ export function isRomFolder(folderName: string) {
 
 export async function scrapeFolder(folderPath: string) {
   const files = await glob(["**/*"], { onlyFiles: true, cwd: folderPath });
+  let found = 0;
+  let missing = 0;
   for (const file of files) {
     const filePath = path.join(folderPath, file);
     const machine = getMachine(filePath);
@@ -108,6 +113,16 @@ export async function scrapeFolder(folderPath: string) {
     const machineData = machines[machine];
     debug(`Machine: ${machine} (file: ${filePath})`);
     const boxartUrl = await findBoxartUrl(filePath, machine);
+    if (boxartUrl) {
+      found++;
+      debug(`Found boxart URL: "${boxartUrl}"`);
+      const outPath = path.join(path.dirname(filePath), resFolder, `${path.basename(filePath)}.png`);
+      await resizeImageTo(boxartUrl, { width: 250 }, outPath);
+    } else {
+      missing++;
+      debug(`No boxart found for "${filePath}"`);
+      console.log(`No boxart found for "${filePath}"`);
+    }
   }
 }
 
@@ -125,10 +140,14 @@ export async function findBoxartUrl(filePath: string, machine: string) {
     machineCache[machine] ??= {};
     machineCache[machine].boxarts = boxarts;
   }
+
   const fileName = path.basename(filePath, path.extname(filePath));
 
-  // try exact match
+  // Try exact match
+  const pngName = `${fileName}.png`;
+  if (boxarts.includes(pngName)) {
+    return `${baseUrl}${machine}/${boxartPath}/${pngName}`;
+  }
 
-  // try searching without () and [] in the name
-
+  // Try searching without () and [] in the name
 }
