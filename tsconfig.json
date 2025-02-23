@@ -6,7 +6,7 @@
     "moduleResolution": "nodenext",
     "lib": ["es2022", "dom"],
     "declaration": true,
-    "outDir": "src",
+    "outDir": "lib",
     "strict": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,

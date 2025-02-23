@@ -7,6 +7,7 @@
     "mscraper": "bin/mscraper.js"
   },
   "scripts": {
+    "start": "npm run build && ./bin/mscraper.js test",
     "build": "npm run clean -s && tsc",
     "build:watch": "tsc -w --sourceMap",
     "lint": "xo",
@@ -41,5 +42,9 @@
   },
   "files": [
     "lib"
-  ]
+  ],
+  "dependencies": {
+    "fast-glob": "^3.3.3",
+    "npm": "^11.1.0"
+  }
 }
