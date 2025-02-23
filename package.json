@@ -1,0 +1,45 @@
+{
+  "name": "minui-scraper",
+  "description": "",
+  "type": "module",
+  "version": "1.0.0",
+  "bin": {
+    "mscraper": "bin/mscraper.js"
+  },
+  "scripts": {
+    "build": "npm run clean -s && tsc",
+    "build:watch": "tsc -w --sourceMap",
+    "lint": "xo",
+    "lint:fix": "xo --fix",
+    "test": "xo",
+    "clean": "rm -rf lib *.tgz",
+    "release:check": "semantic-release --dry-run"
+  },
+  "keywords": [],
+  "author": {
+    "name": "Yohan Lasorsa",
+    "url": "https://bsky.app/profile/sinedied.bsky.social"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
+  "devDependencies": {
+    "dotenv": "^16.4.7",
+    "xo": "^0.60.0"
+  },
+  "xo": {
+    "space": true,
+    "prettier": true,
+    "envs": [
+      "node"
+    ],
+    "rules": {
+      "@typescript-eslint/no-unsafe-assignment": "off"
+    }
+  },
+  "files": [
+    "lib"
+  ]
+}
