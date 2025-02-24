@@ -137,7 +137,7 @@ export async function scrapeFolder(folderPath: string, options: Options = {}) {
   debug('--------------------------------');
 }
 
-export async function findBoxartUrl(filePath: string, machine: string) {
+export async function findBoxartUrl(filePath: string, machine: string, fallback = true): Promise<string | undefined> {
   let boxarts = machineCache[machine]?.boxarts;
   if (!boxarts) {
     const boxartsPath = `${baseUrl}${machine}/${boxartPath}/`;
@@ -157,10 +157,33 @@ export async function findBoxartUrl(filePath: string, machine: string) {
   // Try exact match
   const pngName = `${fileName}.png`;
   if (boxarts.includes(pngName)) {
+    debug(`Found exatct match for "${fileName}"`);
     return `${baseUrl}${machine}/${boxartPath}/${pngName}`;
   }
 
-  // Try searching without () and [] in the name
+  // Try searching after removing (...) and [...] in the name
+  const strippedName = fileName.replaceAll(/(\(.*?\)|\[.*?])/g, '').trim();
+  const matchedArt = boxarts.find((b) => b.includes(strippedName));
+  if (matchedArt) {
+    debug(`Found match for "${strippedName}" after stripping () []`);
+    return `${baseUrl}${machine}/${boxartPath}/${matchedArt}`;
+  }
+
+  if (!fallback) return undefined;
+
+  // Try with fallback machines
+  const fallbackMachines = machines[machine]?.fallbacks ?? [];
+  for (const fallbackMachine of fallbackMachines) {
+    const artUrl = await findBoxartUrl(filePath, fallbackMachine, false);
+    if (artUrl) {
+      debug(`Found match for "${fileName}" in fallback machine "${fallbackMachine}"`);
+      return artUrl;
+    }
+
+    debug(`No match for "${fileName}" in fallback machine "${fallbackMachine}"`);
+  }
+
+  return undefined;
 }
 
 export async function pathExists(path: string) {
