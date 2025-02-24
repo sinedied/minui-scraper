@@ -29,33 +29,33 @@ const snapPath = 'Named_Snaps';
 const titlePath = 'Named_Titles';
 const machines: Record<string, Machine> = {
   'Nintendo - Game Boy': {
-    extensions: ['gb', 'sgb'],
+    extensions: ['gb', 'sgb', 'zip'],
     alias: ['GB', 'Game Boy'],
     fallbacks: ['Nintendo - Game Boy Color']
   },
   'Nintendo - Game Boy Color': {
-    extensions: ['gbc'],
+    extensions: ['gbc', 'zip'],
     alias: ['GBC', 'Game Boy Color'],
     fallbacks: ['Nintendo - Game Boy']
   },
   'Nintendo - Game Boy Advance': {
-    extensions: ['gba'],
+    extensions: ['gba', 'zip'],
     alias: ['GBA', 'Game Boy Advance']
   },
   'Nintendo - Nintendo Entertainment System': {
-    extensions: ['nes'],
+    extensions: ['nes', 'zip'],
     alias: ['NES', 'Famicom', 'Nintendo']
   },
   'Nintendo - Super Nintendo Entertainment System': {
-    extensions: ['sfc', 'smc'],
+    extensions: ['sfc', 'smc', 'zip'],
     alias: ['SNES', 'Super Famicom', 'Super Nintendo', 'Super NES']
   },
   'Nintendo - Nintendo 64': {
-    extensions: ['n64', 'v64'],
+    extensions: ['n64', 'v64', 'zip'],
     alias: ['N64', 'Nintendo 64']
   },
   'Sega - 32X': {
-    extensions: ['32x'],
+    extensions: ['32x', 'zip'],
     alias: ['32X', 'THIRTYTWOX']
   },
   'Sega - Dreamcast': {
@@ -63,7 +63,7 @@ const machines: Record<string, Machine> = {
     alias: ['DC', 'Dreamcast']
   },
   'Sega - Mega Drive - Genesis': {
-    extensions: ['md', 'gen'],
+    extensions: ['md', 'gen', 'zip'],
     alias: ['MD', 'Mega Drive', 'Genesis']
   },
   'Sega - Mega-CD - Sega CD': {
@@ -71,11 +71,11 @@ const machines: Record<string, Machine> = {
     alias: ['Mega CD', 'Sega CD', 'MegaCD', 'SegaCD']
   },
   'Sega - Game Gear': {
-    extensions: ['gg'],
+    extensions: ['gg', 'zip'],
     alias: ['GG', 'Game Gear']
   },
   'Sega - Master System - Mark III': {
-    extensions: ['sms'],
+    extensions: ['sms', 'zip'],
     alias: ['SMS', 'MS', 'Master System', 'Mark III']
   },
   'Sony - PlayStation': {
