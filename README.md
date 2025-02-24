@@ -39,7 +39,7 @@ mscraper <rompath> [options]
 
 ### Options
 
-- `--width, -w <size>`: Max width of the image (default: 250)
+- `--width, -w <size>`: Max width of the image (default: 300)
 - `--height, -h <size>`: Max height of the image
 - `--ai, -a`: Use AI for advanced matching (default: false)
 - `--ai-model, -m <name>`: Ollama model to use for AI matching (default: `gemma2:2b`)

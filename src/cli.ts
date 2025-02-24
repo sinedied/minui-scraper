@@ -27,7 +27,7 @@ export async function run(args: string[] = process.argv) {
     .name(basename(process.argv[1]))
     .description(packageJson.description)
     .argument('<rompath>', 'Path to the folder containing the ROMs')
-    .option('--width, -w <size>', 'Max width of the image', Number.parseFloat, 250)
+    .option('--width, -w <size>', 'Max width of the image', Number.parseFloat, 300)
     .option('--height, -h <size>', 'Max height of the image', Number.parseFloat)
     .option('--ai, -a', 'Use AI for advanced matching', false)
     .option('--ai-model, -m <name>', 'Ollama model to use for AI matching', 'gemma2:2b')

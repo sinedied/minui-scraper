@@ -9,7 +9,7 @@ export type Size = {
 
 export async function resizeImageTo(url: string, destination: string, size?: Size) {
   try {
-    const width = size?.width ?? 250;
+    const width = size?.width ?? 300;
     const height = size?.height;
     const image = await Jimp.read(url);
     await mkdir(path.dirname(destination), { recursive: true });
