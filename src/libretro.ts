@@ -184,7 +184,7 @@ export async function findArtUrl(
   if (match) return match;
 
   // Try searching after removing substitles in the name
-  strippedName = strippedName.split('-')[0].trim();
+  strippedName = strippedName.split(' - ')[0].trim();
   match = await findMatch(strippedName);
   if (match) return match;
 
