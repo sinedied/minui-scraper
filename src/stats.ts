@@ -4,5 +4,6 @@ export const stats = {
     partial: 0,
     ai: 0,
     none: 0
-  }
+  },
+  skipped: 0
 };

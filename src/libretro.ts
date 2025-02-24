@@ -112,6 +112,7 @@ export async function scrapeFolder(folderPath: string, options: Options = {}) {
 
     if ((await pathExists(artPath)) && !options.force) {
       debug(`Art file already exists, skipping "${artPath}"`);
+      stats.skipped++;
       continue;
     }
 
@@ -213,7 +214,7 @@ export async function cleanupResFolder(folderPath: string) {
 }
 
 export function santizeName(name: string) {
-  return name.replaceAll(/[&*/:`<>?\|"]/g, '_');
+  return name.replaceAll(/[&*/:`<>?|"]/g, '_');
 }
 
 export async function pathExists(path: string) {

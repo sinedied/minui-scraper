@@ -80,11 +80,9 @@ export async function run(args: string[] = process.argv) {
       console.info(`Scraped ${romFolders.length} folders`);
       console.info(`- ${stats.matches.perfect} perfect matches`);
       console.info(`- ${stats.matches.partial} partial matches`);
-      if (options.ai) {
-        console.info(`- ${stats.matches.ai} AI matches`);
-      }
-
+      if (options.ai) console.info(`- ${stats.matches.ai} AI matches`);
       console.info(`- ${stats.matches.none} not found`);
+      if (stats.skipped) console.info(`- ${stats.skipped} existing`);
     });
 
   program.parse(args);
