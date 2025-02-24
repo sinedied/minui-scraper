@@ -9,7 +9,7 @@
 Artwork scraper for MinUI.
 
 > [!NOTE]
-> MinUI does't officially support it, but still has [some support for it as stated by its author](https://www.reddit.com/r/SBCGaming/comments/1hycyqx/minui_box_art/).
+> MinUI does't officially support boxarts, but still has [some support for it as stated by its author](https://www.reddit.com/r/SBCGaming/comments/1hycyqx/minui_box_art/).
 
 **Features:**
 - Scrapes boxart for your ROMs, in a MinUI compatible format
