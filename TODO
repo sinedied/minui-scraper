@@ -6,10 +6,10 @@
 - [x] option: preferred regions (jp, us, eu)
 - [x] print not exact matches machine/match
 - [x] print stats
-- [ ] fix GBC detected as GB
-- [ ] AI try again when candidate not found
+- [x] fix GBC detected as GB
+- [x] AI try again when candidate not found
+- [x] test with subfolder
 - [ ] add cleanup option to remove all boxarts
-- [ ] test with subfolder
 
 ## Maybe
 

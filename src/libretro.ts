@@ -26,11 +26,6 @@ export enum ArtType {
 const resFolder = '.res';
 const baseUrl = 'https://thumbnails.libretro.com/';
 const machines: Record<string, Machine> = {
-  'Nintendo - Game Boy': {
-    extensions: ['gb', 'sgb', 'zip'],
-    alias: ['GB', 'Game Boy'],
-    fallbacks: ['Nintendo - Game Boy Color']
-  },
   'Nintendo - Game Boy Color': {
     extensions: ['gbc', 'zip'],
     alias: ['GBC', 'Game Boy Color'],
@@ -40,9 +35,10 @@ const machines: Record<string, Machine> = {
     extensions: ['gba', 'zip'],
     alias: ['GBA', 'Game Boy Advance']
   },
-  'Nintendo - Nintendo Entertainment System': {
-    extensions: ['nes', 'zip'],
-    alias: ['NES', 'Famicom', 'Nintendo']
+  'Nintendo - Game Boy': {
+    extensions: ['gb', 'sgb', 'zip'],
+    alias: ['GB', 'Game Boy'],
+    fallbacks: ['Nintendo - Game Boy Color']
   },
   'Nintendo - Super Nintendo Entertainment System': {
     extensions: ['sfc', 'smc', 'zip'],
@@ -51,6 +47,10 @@ const machines: Record<string, Machine> = {
   'Nintendo - Nintendo 64': {
     extensions: ['n64', 'v64', 'zip'],
     alias: ['N64', 'Nintendo 64']
+  },
+  'Nintendo - Nintendo Entertainment System': {
+    extensions: ['nes', 'zip'],
+    alias: ['NES', 'Famicom', 'Nintendo']
   },
   'Sega - 32X': {
     extensions: ['32x', 'zip'],
@@ -88,11 +88,11 @@ const machines: Record<string, Machine> = {
 const aliases = Object.values(machines).flatMap((machine) => machine.alias);
 const machineCache: MachineCache = {};
 
-export function getMachine(file: string) {
+export function getMachine(file: string, isFolder = false) {
   const extension = file.split('.').pop() ?? '';
   const firstComponent = file.split(/\\|\//)[0];
   const machine = Object.entries(machines).find(([_, { extensions, alias }]) => {
-    return extensions.includes(extension) && alias.some((a) => firstComponent.includes(a));
+    return (isFolder || extensions.includes(extension)) && alias.some((a) => firstComponent.includes(a));
   });
   return machine ? machine[0] : undefined;
 }
@@ -103,7 +103,7 @@ export function isRomFolder(folderName: string) {
 
 export async function scrapeFolder(folderPath: string, options: Options = {}) {
   debug('Options:', options);
-  debug(`Scraping folder: ${folderPath}`);
+  console.info(`Scraping folder: ${folderPath} [Detected: ${getMachine(folderPath, true)}]`);
   const files = await glob(['**/*'], { onlyFiles: true, cwd: folderPath });
 
   for (const file of files) {
