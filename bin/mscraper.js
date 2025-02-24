@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-import process from 'node:process';
-import {run} from '../lib/cli.js';
+import { run } from '../lib/cli.js';
 
 run();

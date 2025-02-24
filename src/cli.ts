@@ -1,12 +1,12 @@
 import process from 'node:process';
 import fs from 'node:fs/promises';
-import {fileURLToPath} from 'node:url';
-import {join, dirname, basename} from 'node:path';
-import {type Command, program} from 'commander';
+import { fileURLToPath } from 'node:url';
+import { join, dirname, basename } from 'node:path';
+import { type Command, program } from 'commander';
 import debug from 'debug';
 import glob from 'fast-glob';
 import updateNotifier from 'update-notifier';
-import {isRomFolder, scrapeFolder} from './libretro.js';
+import { isRomFolder, scrapeFolder } from './libretro.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -14,7 +14,7 @@ export async function run(args: string[] = process.argv) {
   const file = await fs.readFile(join(__dirname, '..', 'package.json'), 'utf8');
   const packageJson = JSON.parse(file);
 
-  updateNotifier({pkg: packageJson}).notify();
+  updateNotifier({ pkg: packageJson }).notify();
 
   if (args.includes('--verbose')) {
     debug.enable('*');
@@ -31,9 +31,9 @@ export async function run(args: string[] = process.argv) {
     .version(packageJson.version, '-v, --version', 'Show current version')
     .helpCommand(false)
     .allowExcessArguments(false)
-    .action(async (targetPath: string, options: Command) => {
+    .action(async (targetPath: string, command: Command) => {
       process.chdir(targetPath);
-      const allFolders = await glob(['*'], {onlyDirectories: true});
+      const allFolders = await glob(['*'], { onlyDirectories: true });
       const romFolders = allFolders.filter(isRomFolder);
 
       if (romFolders.length === 0) {
@@ -42,9 +42,7 @@ export async function run(args: string[] = process.argv) {
       }
 
       for (const folder of romFolders) {
-        debug(`Scraping folder: ${folder}`);
-        await scrapeFolder(folder);
-        debug('--------------------------------');
+        await scrapeFolder(folder, command.opts());
       }
     });
 

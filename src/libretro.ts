@@ -2,7 +2,8 @@ import path from 'node:path';
 import fs from 'node:fs/promises';
 import createDebug from 'debug';
 import glob from 'fast-glob';
-import {resizeImageTo} from './image.js';
+import { resizeImageTo } from './image.js';
+import { type Options } from './options.js';
 
 const debug = createDebug('command');
 
@@ -30,61 +31,61 @@ const machines: Record<string, Machine> = {
   'Nintendo - Game Boy': {
     extensions: ['gb', 'sgb'],
     alias: ['GB', 'Game Boy'],
-    fallbacks: ['Nintendo - Game Boy Color'],
+    fallbacks: ['Nintendo - Game Boy Color']
   },
   'Nintendo - Game Boy Color': {
     extensions: ['gbc'],
     alias: ['GBC', 'Game Boy Color'],
-    fallbacks: ['Nintendo - Game Boy'],
+    fallbacks: ['Nintendo - Game Boy']
   },
   'Nintendo - Game Boy Advance': {
     extensions: ['gba'],
-    alias: ['GBA', 'Game Boy Advance'],
+    alias: ['GBA', 'Game Boy Advance']
   },
   'Nintendo - Nintendo Entertainment System': {
     extensions: ['nes'],
-    alias: ['NES', 'Famicom', 'Nintendo'],
+    alias: ['NES', 'Famicom', 'Nintendo']
   },
   'Nintendo - Super Nintendo Entertainment System': {
     extensions: ['sfc', 'smc'],
-    alias: ['SNES', 'Super Famicom', 'Super Nintendo', 'Super NES'],
+    alias: ['SNES', 'Super Famicom', 'Super Nintendo', 'Super NES']
   },
   'Nintendo - Nintendo 64': {
     extensions: ['n64', 'v64'],
-    alias: ['N64', 'Nintendo 64'],
+    alias: ['N64', 'Nintendo 64']
   },
   'Sega - 32X': {
     extensions: ['32x'],
-    alias: ['32X', 'THIRTYTWOX'],
+    alias: ['32X', 'THIRTYTWOX']
   },
   'Sega - Dreamcast': {
     extensions: ['dc', 'chd', 'gdi'],
-    alias: ['DC', 'Dreamcast'],
+    alias: ['DC', 'Dreamcast']
   },
   'Sega - Mega Drive - Genesis': {
     extensions: ['md', 'gen'],
-    alias: ['MD', 'Mega Drive', 'Genesis'],
+    alias: ['MD', 'Mega Drive', 'Genesis']
   },
   'Sega - Mega-CD - Sega CD': {
     extensions: ['chd', 'iso', 'cue'],
-    alias: ['Mega CD', 'Sega CD', 'MegaCD', 'SegaCD'],
+    alias: ['Mega CD', 'Sega CD', 'MegaCD', 'SegaCD']
   },
   'Sega - Game Gear': {
     extensions: ['gg'],
-    alias: ['GG', 'Game Gear'],
+    alias: ['GG', 'Game Gear']
   },
   'Sega - Master System - Mark III': {
     extensions: ['sms'],
-    alias: ['SMS', 'MS', 'Master System', 'Mark III'],
+    alias: ['SMS', 'MS', 'Master System', 'Mark III']
   },
   'Sony - PlayStation': {
     extensions: ['chd', 'cue'],
-    alias: ['PSX', 'PS1', 'PlayStation'],
+    alias: ['PSX', 'PS1', 'PlayStation']
   },
   'Sega - Saturn': {
     extensions: ['chd', 'cue'],
-    alias: ['Saturn'],
-  },
+    alias: ['Saturn']
+  }
 };
 const aliases = Object.values(machines).flatMap((machine) => machine.alias);
 const machineCache: MachineCache = {};
@@ -92,7 +93,7 @@ const machineCache: MachineCache = {};
 export function getMachine(file: string) {
   const extension = file.split('.').pop() ?? '';
   const firstComponent = file.split(/\\|\//)[0];
-  const machine = Object.entries(machines).find(([machine, {extensions, alias}]) => {
+  const machine = Object.entries(machines).find(([machine, { extensions, alias }]) => {
     return extensions.includes(extension) && alias.some((a) => firstComponent.includes(a));
   });
   return machine ? machine[0] : undefined;
@@ -102,29 +103,38 @@ export function isRomFolder(folderName: string) {
   return aliases.some((alias) => folderName.toLowerCase().includes(alias.toLowerCase()));
 }
 
-export async function scrapeFolder(folderPath: string) {
-  const files = await glob(['**/*'], {onlyFiles: true, cwd: folderPath});
+export async function scrapeFolder(folderPath: string, options: Options = {}) {
+  debug('Options:', options);
+  debug(`Scraping folder: ${folderPath}`);
+  const files = await glob(['**/*'], { onlyFiles: true, cwd: folderPath });
   let found = 0;
   let missing = 0;
   for (const file of files) {
     const filePath = path.join(folderPath, file);
+    const artPath = path.join(path.dirname(filePath), resFolder, `${path.basename(filePath)}.png`);
+
+    if ((await pathExists(artPath)) && !options.force) {
+      debug(`Art file already exists, skipping "${artPath}"`);
+      continue;
+    }
+
     const machine = getMachine(filePath);
     if (!machine) continue;
 
-    const machineData = machines[machine];
     debug(`Machine: ${machine} (file: ${filePath})`);
     const boxartUrl = await findBoxartUrl(filePath, machine);
     if (boxartUrl) {
       found++;
       debug(`Found boxart URL: "${boxartUrl}"`);
-      const outPath = path.join(path.dirname(filePath), resFolder, `${path.basename(filePath)}.png`);
-      await resizeImageTo(boxartUrl, outPath, {width: 250});
+      await resizeImageTo(boxartUrl, artPath, { width: options.width, height: options.height });
     } else {
       missing++;
       debug(`No boxart found for "${filePath}"`);
       console.log(`No boxart found for "${filePath}"`);
     }
   }
+
+  debug('--------------------------------');
 }
 
 export async function findBoxartUrl(filePath: string, machine: string) {
