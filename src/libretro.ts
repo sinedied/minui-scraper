@@ -2,9 +2,9 @@ import path from 'node:path';
 import fs from 'node:fs/promises';
 import createDebug from 'debug';
 import glob from 'fast-glob';
-import { closest } from 'fastest-levenshtein';
 import { resizeImageTo } from './image.js';
 import { type Options } from './options.js';
+import { findBestMatch } from './matcher.js';
 
 const debug = createDebug('libretro');
 
@@ -90,7 +90,7 @@ const machineCache: MachineCache = {};
 export function getMachine(file: string) {
   const extension = file.split('.').pop() ?? '';
   const firstComponent = file.split(/\\|\//)[0];
-  const machine = Object.entries(machines).find(([machine, { extensions, alias }]) => {
+  const machine = Object.entries(machines).find(([_, { extensions, alias }]) => {
     return extensions.includes(extension) && alias.some((a) => firstComponent.includes(a));
   });
   return machine ? machine[0] : undefined;
@@ -119,7 +119,7 @@ export async function scrapeFolder(folderPath: string, options: Options = {}) {
     if (!machine) continue;
 
     debug(`Machine: ${machine} (file: ${filePath})`);
-    const boxartUrl = await findArtUrl(filePath, machine);
+    const boxartUrl = await findArtUrl(filePath, machine, options);
     if (boxartUrl) {
       found++;
       debug(`Found boxart URL: "${boxartUrl}"`);
@@ -130,13 +130,13 @@ export async function scrapeFolder(folderPath: string, options: Options = {}) {
       console.log(`No boxart found for "${filePath}"`);
     }
   }
-
   debug('--------------------------------');
 }
 
 export async function findArtUrl(
   filePath: string,
   machine: string,
+  options: Options = {},
   type: ArtType = ArtType.Boxart,
   fallback = true
 ): Promise<string | undefined> {
@@ -163,11 +163,10 @@ export async function findArtUrl(
     return `${baseUrl}${machine}/${type}/${pngName}`;
   }
 
-  const findMatch = (name: string) => {
+  const findMatch = async (name: string) => {
     const matches = arts.filter((a) => a.includes(name));
     if (matches.length > 0) {
-      const bestMatch = closest(name, matches);
-      debug(`Found match for "${name}" (file: "${fileName}"): "${bestMatch}"`);
+      const bestMatch = await findBestMatch(fileName, name, matches, options);
       return `${baseUrl}${machine}/${type}/${bestMatch}`;
     }
 
@@ -176,24 +175,24 @@ export async function findArtUrl(
 
   // Try searching after removing (...) and [...] in the name
   let strippedName = fileName.replaceAll(/(\(.*?\)|\[.*?])/g, '').trim();
-  let match = findMatch(strippedName);
+  let match = await findMatch(strippedName);
   if (match) return match;
 
   // Try searching after removing DX in the name
   strippedName = strippedName.replaceAll('DX', '').trim();
-  match = findMatch(strippedName);
+  match = await findMatch(strippedName);
   if (match) return match;
 
   // Try searching after removing substitles in the name
   strippedName = strippedName.split('-')[0].trim();
-  match = findMatch(strippedName);
+  match = await findMatch(strippedName);
   if (match) return match;
 
   // Try with fallback machines
   if (!fallback) return undefined;
   const fallbackMachines = machines[machine]?.fallbacks ?? [];
   for (const fallbackMachine of fallbackMachines) {
-    const artUrl = await findArtUrl(filePath, fallbackMachine, type, false);
+    const artUrl = await findArtUrl(filePath, fallbackMachine, options, type, false);
     if (artUrl) {
       debug(`Found match for "${fileName}" in fallback machine "${fallbackMachine}"`);
       return artUrl;

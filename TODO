@@ -1,9 +1,14 @@
 # TODO
 
-- [ ] option: scraper (libretro / screenscraper) other?
-- [ ] ask api key screenscraper
-- [ ] option: exact match
+- [c] option: exact match
+- [c] config.json?
 - [x] option: width / height (max)
 - [x] option: skip existing
+- [ ] ai matcher
+- [ ] option: preferred regions (jp, us, eu)
+
+## Maybe
+
+- [ ] option: scraper (libretro / screenscraper) other?
+- [ ] ask api key screenscraper
 - [ ] .env for user/pass if needed
-- [c] config.json?
