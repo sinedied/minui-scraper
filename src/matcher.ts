@@ -29,7 +29,8 @@ export async function findBestMatchWithAi(
   search: string,
   name: string,
   candidates: string[],
-  options: Options
+  options: Options,
+  retries = 2
 ): Promise<string | undefined> {
   const prompt = `
 ## Candidates
@@ -60,7 +61,10 @@ Answer with JSON using the following format:
 
   if (!candidates.includes(bestMatch)) {
     debug(`AI found a match for "${name}" (searched: "${search}"), but it's not a candidate: "${bestMatch}"`);
-    return undefined;
+    if (retries <= 0) return undefined;
+
+    debug(`Retrying AI match for "${name}" (Tries left: ${retries})`);
+    return findBestMatchWithAi(search, name, candidates, options, retries - 1);
   }
 
   console.info(`AI match for "${name}" (searched: "${search}"): "${bestMatch}"`);
