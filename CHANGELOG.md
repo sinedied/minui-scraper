@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/sinedied/minui-scraper/compare/1.0.0...1.1.0) (2025-02-24)
+
+
+### Features
+
+* change default width to 300 ([3636ff5](https://github.com/sinedied/minui-scraper/commit/3636ff512095857be7e9524571fe63264be7f9cb))
+
 # 1.0.0 (2025-02-24)
 
 
