@@ -25,8 +25,8 @@ export async function run(args: string[] = process.argv) {
     .name(basename(process.argv[1]))
     .description(packageJson.description)
     .argument('<rompath>', 'Path to the folder containing the ROMs')
-    .option('--width, -w <size>', 'Max width of the image', parseFloat, 250)
-    .option('--height, -h <size>', 'Max height of the image', parseFloat)
+    .option('--width, -w <size>', 'Max width of the image', Number.parseFloat, 250)
+    .option('--height, -h <size>', 'Max height of the image', Number.parseFloat)
     .option('--force, -f', 'Force scraping over existing images')
     .option('--verbose', 'Show detailed logs')
     .version(packageJson.version, '-v, --version', 'Show current version')
@@ -41,6 +41,9 @@ export async function run(args: string[] = process.argv) {
         console.log('No ROM folders found');
         return;
       }
+
+      const log = debug('cli');
+      log('Found ROM folders:', romFolders);
 
       for (const folder of romFolders) {
         await scrapeFolder(folder, options);
