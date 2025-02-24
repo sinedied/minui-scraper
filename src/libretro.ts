@@ -37,12 +37,12 @@ const machines: Record<string, Machine> = {
   },
   'Nintendo - Game Boy': {
     extensions: ['gb', 'sgb', 'zip'],
-    alias: ['GB', 'Game Boy'],
+    alias: ['GB', 'SGB', 'Game Boy'],
     fallbacks: ['Nintendo - Game Boy Color']
   },
   'Nintendo - Super Nintendo Entertainment System': {
     extensions: ['sfc', 'smc', 'zip'],
-    alias: ['SNES', 'Super Famicom', 'Super Nintendo', 'Super NES']
+    alias: ['SNES', 'SFC', 'Super Famicom', 'Super Nintendo', 'Super NES']
   },
   'Nintendo - Nintendo 64': {
     extensions: ['n64', 'v64', 'zip'],
@@ -50,7 +50,7 @@ const machines: Record<string, Machine> = {
   },
   'Nintendo - Nintendo Entertainment System': {
     extensions: ['nes', 'zip'],
-    alias: ['NES', 'Famicom', 'Nintendo']
+    alias: ['NES', 'FC', 'Famicom', 'Nintendo']
   },
   'Sega - 32X': {
     extensions: ['32x', 'zip'],
