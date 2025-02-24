@@ -127,9 +127,10 @@ export async function scrapeFolder(folderPath: string, options: Options = {}) {
     } else {
       missing++;
       debug(`No boxart found for "${filePath}"`);
-      console.log(`No boxart found for "${filePath}"`);
+      console.info(`No boxart found for "${filePath}"`);
     }
   }
+
   debug('--------------------------------');
 }
 
@@ -166,7 +167,7 @@ export async function findArtUrl(
   const findMatch = async (name: string) => {
     const matches = arts.filter((a) => a.includes(name));
     if (matches.length > 0) {
-      const bestMatch = await findBestMatch(fileName, name, matches, options);
+      const bestMatch = await findBestMatch(name, fileName, matches, options);
       return `${baseUrl}${machine}/${type}/${bestMatch}`;
     }
 

@@ -21,7 +21,8 @@
   "keywords": [
     "minui",
     "scraper",
-    "boxart"
+    "boxart",
+    "ai"
   ],
   "author": {
     "name": "Yohan Lasorsa",
@@ -43,6 +44,7 @@
     "fast-glob": "^3.3.3",
     "fastest-levenshtein": "^1.0.16",
     "jimp": "^1.6.0",
+    "ollama": "^0.5.13",
     "update-notifier": "^7.3.1"
   },
   "devDependencies": {
