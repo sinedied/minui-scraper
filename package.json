@@ -1,8 +1,12 @@
 {
   "name": "minui-scraper",
   "description": "Artwork scraper for MinUI",
-  "type": "module",
   "version": "1.0.0",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sinedied/minui-scraper.git"
+  },
   "bin": {
     "mscraper": "bin/mscraper.js"
   },
