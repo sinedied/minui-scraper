@@ -13,7 +13,7 @@
   "exports": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "start": "npm run build && ./bin/mscraper.js test",
+    "start": "npm run build && node \"./bin/mscraper.js\" test",
     "build": "npm run clean -s && tsc",
     "build:watch": "tsc -w --sourceMap",
     "lint": "xo",
