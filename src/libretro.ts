@@ -157,7 +157,7 @@ export async function findArtUrl(
   const fileName = path.basename(filePath, path.extname(filePath));
 
   // Try exact match
-  const pngName = `${fileName}.png`;
+  const pngName = santizeName(`${fileName}.png`);
   if (arts.includes(pngName)) {
     debug(`Found exact match for "${fileName}"`);
     stats.matches.perfect++;
@@ -165,7 +165,7 @@ export async function findArtUrl(
   }
 
   const findMatch = async (name: string) => {
-    const matches = arts.filter((a) => a.includes(name));
+    const matches = arts.filter((a) => a.includes(santizeName(name)));
     if (matches.length > 0) {
       const bestMatch = await findBestMatch(name, fileName, matches, options);
       return `${baseUrl}${machine}/${type}/${bestMatch}`;
@@ -210,6 +210,10 @@ export async function cleanupResFolder(folderPath: string) {
   const resFolders = await glob([`**/${resFolder}`], { onlyDirectories: true, cwd: folderPath });
   await Promise.all(resFolders.map(async (resFolder) => fs.rm(resFolder, { recursive: true })));
   console.info(`Removed ${resFolders.length} ${resFolder} folders`);
+}
+
+export function santizeName(name: string) {
+  return name.replaceAll(/[&*/:`<>?\|"]/g, '_');
 }
 
 export async function pathExists(path: string) {
