@@ -1,12 +1,15 @@
 # TODO
 
-- [c] option: exact match
-- [c] config.json?
 - [x] option: width / height (max)
 - [x] option: skip existing
 - [x] ai matcher
 - [x] option: preferred regions (jp, us, eu)
-- [ ] print not exact matches machine/match
+- [x] print not exact matches machine/match
+- [x] print stats
+- [ ] fix GBC detected as GB
+- [ ] AI try again when candidate not found
+- [ ] add cleanup option to remove all boxarts
+- [ ] test with subfolder
 
 ## Maybe
 

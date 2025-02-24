@@ -5,6 +5,7 @@ import glob from 'fast-glob';
 import { resizeImageTo } from './image.js';
 import { type Options } from './options.js';
 import { findBestMatch } from './matcher.js';
+import { stats } from './stats.js';
 
 const debug = createDebug('libretro');
 
@@ -104,8 +105,7 @@ export async function scrapeFolder(folderPath: string, options: Options = {}) {
   debug('Options:', options);
   debug(`Scraping folder: ${folderPath}`);
   const files = await glob(['**/*'], { onlyFiles: true, cwd: folderPath });
-  let found = 0;
-  let missing = 0;
+
   for (const file of files) {
     const filePath = path.join(folderPath, file);
     const artPath = path.join(path.dirname(filePath), resFolder, `${path.basename(filePath)}.png`);
@@ -121,11 +121,9 @@ export async function scrapeFolder(folderPath: string, options: Options = {}) {
     debug(`Machine: ${machine} (file: ${filePath})`);
     const boxartUrl = await findArtUrl(filePath, machine, options);
     if (boxartUrl) {
-      found++;
       debug(`Found boxart URL: "${boxartUrl}"`);
       await resizeImageTo(boxartUrl, artPath, { width: options.width, height: options.height });
     } else {
-      missing++;
       debug(`No boxart found for "${filePath}"`);
       console.info(`No boxart found for "${filePath}"`);
     }
@@ -161,6 +159,7 @@ export async function findArtUrl(
   const pngName = `${fileName}.png`;
   if (arts.includes(pngName)) {
     debug(`Found exact match for "${fileName}"`);
+    stats.matches.perfect++;
     return `${baseUrl}${machine}/${type}/${pngName}`;
   }
 
@@ -202,6 +201,7 @@ export async function findArtUrl(
     debug(`No match for "${fileName}" in fallback machine "${fallbackMachine}"`);
   }
 
+  stats.matches.none++;
   return undefined;
 }
 

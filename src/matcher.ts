@@ -2,6 +2,7 @@ import { closest } from 'fastest-levenshtein';
 import createDebug from 'debug';
 import { type Options } from './options.js';
 import { getCompletion } from './ollama.js';
+import { stats } from './stats.js';
 
 const debug = createDebug('matcher');
 
@@ -19,7 +20,8 @@ export async function findBestMatch(search: string, name: string, candidates: st
   const bestIndex = strippedCandidates.indexOf(best);
   const bestMatch = candidates[bestIndex];
 
-  debug(`Found match for "${name}" (searched: "${search}"): "${bestMatch}"`);
+  console.info(`Partial match for "${name}" (searched: "${search}"): "${bestMatch}"`);
+  stats.matches.partial++;
   return bestMatch;
 }
 
@@ -61,6 +63,7 @@ Answer with JSON using the following format:
     return undefined;
   }
 
-  debug(`AI found a match for "${name}" (searched: "${search}"): "${bestMatch}"`);
+  console.info(`AI match for "${name}" (searched: "${search}"): "${bestMatch}"`);
+  stats.matches.ai++;
   return bestMatch;
 }
