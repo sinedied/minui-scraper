@@ -5,4 +5,5 @@ export type Options = {
   ai?: boolean;
   aiModel?: string;
   regions?: string;
+  cleanup?: boolean;
 };

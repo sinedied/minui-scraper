@@ -205,6 +205,12 @@ export async function findArtUrl(
   return undefined;
 }
 
+export async function cleanupResFolder(folderPath: string) {
+  const resFolders = await glob([`**/${resFolder}`], { onlyDirectories: true, cwd: folderPath });
+  await Promise.all(resFolders.map(async (resFolder) => fs.rm(resFolder, { recursive: true })));
+  console.info(`Removed ${resFolders.length} ${resFolder} folders`);
+}
+
 export async function pathExists(path: string) {
   try {
     await fs.access(path);

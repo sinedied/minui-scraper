@@ -6,7 +6,7 @@ import { program } from 'commander';
 import debug from 'debug';
 import glob from 'fast-glob';
 import updateNotifier from 'update-notifier';
-import { isRomFolder, scrapeFolder } from './libretro.js';
+import { cleanupResFolder, isRomFolder, scrapeFolder } from './libretro.js';
 import { type Options } from './options.js';
 import { checkOllama } from './ollama.js';
 import { stats } from './stats.js';
@@ -33,12 +33,19 @@ export async function run(args: string[] = process.argv) {
     .option('--ai-model, -m <name>', 'Ollama model to use for AI matching', 'gemma2:2b')
     .option('--regions, -r <regions>', 'Preferred regions to use for AI matching', 'World,Europe,USA,Japan')
     .option('--force, -f', 'Force scraping over existing images')
+    .option('--cleanup', 'Removes all scraped images in target folder')
     .option('--verbose', 'Show detailed logs')
     .version(packageJson.version, '-v, --version', 'Show current version')
     .helpCommand(false)
     .allowExcessArguments(false)
     .action(async (targetPath: string, options: Options) => {
       process.chdir(targetPath);
+
+      if (options.cleanup) {
+        await cleanupResFolder('.');
+        return;
+      }
+
       const allFolders = await glob(['*'], { onlyDirectories: true });
       const romFolders = allFolders.filter(isRomFolder);
       const targetFolder = basename(targetPath);

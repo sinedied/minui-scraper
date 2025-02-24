@@ -1,18 +1,7 @@
 # TODO
 
-- [x] option: width / height (max)
-- [x] option: skip existing
-- [x] ai matcher
-- [x] option: preferred regions (jp, us, eu)
-- [x] print not exact matches machine/match
-- [x] print stats
-- [x] fix GBC detected as GB
-- [x] AI try again when candidate not found
-- [x] test with subfolder
-- [ ] add cleanup option to remove all boxarts
-
 ## Maybe
 
-- [ ] option: scraper (libretro / screenscraper) other?
+- [ ] option: choose scraper (libretro / screenscraper)
 - [ ] ask api key screenscraper
 - [ ] .env for user/pass if needed
