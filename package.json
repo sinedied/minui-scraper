@@ -1,11 +1,13 @@
 {
   "name": "minui-scraper",
-  "description": "",
+  "description": "Artwork scraper for MinUI",
   "type": "module",
   "version": "1.0.0",
   "bin": {
     "mscraper": "bin/mscraper.js"
   },
+  "exports": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "scripts": {
     "start": "npm run build && ./bin/mscraper.js test",
     "build": "npm run clean -s && tsc",
@@ -16,10 +18,18 @@
     "clean": "rm -rf lib *.tgz",
     "release:check": "semantic-release --dry-run"
   },
-  "keywords": [],
+  "keywords": [
+    "minui",
+    "scraper",
+    "boxart"
+  ],
   "author": {
     "name": "Yohan Lasorsa",
     "url": "https://bsky.app/profile/sinedied.bsky.social"
+  },
+  "homepage": "https://github.com/sinedied/minui-scraper",
+  "bugs": {
+    "url": "https://github.com/sinedied/minui-scraper/issues"
   },
   "license": "MIT",
   "engines": {
@@ -27,14 +37,27 @@
     "npm": ">=10.0.0"
   },
   "dependencies": {
+    "commander": "^13.1.0",
     "debug": "^4.4.0",
     "dotenv": "^16.4.7",
     "fast-glob": "^3.3.3",
-    "jimp": "^1.6.0"
+    "jimp": "^1.6.0",
+    "update-notifier": "^7.3.1"
   },
   "devDependencies": {
     "@types/debug": "^4.1.12",
+    "@types/update-notifier": "^6.0.8",
+    "semantic-release": "^24.2.3",
+    "semantic-release-npm-github": "^5.0.0",
     "xo": "^0.60.0"
+  },
+  "release": {
+    "extends": "semantic-release-npm-github",
+    "branches": "main"
+  },
+  "prettier": {
+    "trailingComma": "none",
+    "bracketSpacing": true
   },
   "xo": {
     "space": true,
@@ -43,10 +66,15 @@
       "node"
     ],
     "rules": {
-      "@typescript-eslint/no-unsafe-assignment": "off"
+      "no-await-in-loop": "off",
+      "@typescript-eslint/no-unsafe-assignment": "off",
+      "@typescript-eslint/no-unsafe-arguments": "off",
+      "unicorn/prevent-abbreviations": "off",
+      "unicorn/no-array-callback-reference": "off"
     }
   },
   "files": [
+    "bin",
     "lib"
   ]
 }

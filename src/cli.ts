@@ -1,30 +1,52 @@
 import process from 'node:process';
+import fs from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
-import {dirname} from 'node:path';
+import {join, dirname, basename} from 'node:path';
+import {type Command, program} from 'commander';
 import debug from 'debug';
 import glob from 'fast-glob';
+import updateNotifier from 'update-notifier';
 import {isRomFolder, scrapeFolder} from './libretro.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-export async function run(arguments_: string[] = process.argv) {
-  const [...arguments__] = arguments_;
-  if (arguments__.length === 0) {
-    console.log('Please provide a path');
-    process.exit(1);
-  }
+export async function run(args: string[] = process.argv) {
+  const file = await fs.readFile(join(__dirname, '..', 'package.json'), 'utf8');
+  const packageJson = JSON.parse(file);
 
-  if (arguments_.includes('--verbose')) {
+  updateNotifier({pkg: packageJson}).notify();
+
+  if (args.includes('--verbose')) {
     debug.enable('*');
   }
 
-  const targetPath = arguments__[0];
-  process.chdir(targetPath);
+  program
+    .name(basename(process.argv[1]))
+    .description(packageJson.description)
+    .argument('<rompath>', 'Path to the folder containing the ROMs')
+    .option('--width, -w <size>', 'Max width of the image', '250')
+    .option('--height, -h <size>', 'Max height of the image')
+    .option('--force, -f', 'Force scraping over existing images')
+    .option('--verbose', 'Show detailed logs')
+    .version(packageJson.version, '-v, --version', 'Show current version')
+    .helpCommand(false)
+    .allowExcessArguments(false)
+    .action(async (targetPath: string, options: Command) => {
+      process.chdir(targetPath);
+      const allFolders = await glob(['*'], {onlyDirectories: true});
+      const romFolders = allFolders.filter(isRomFolder);
 
-  const folders = (await glob(['*'], {onlyDirectories: true})).filter(isRomFolder);
-  for (const folder of folders) {
-    debug(`Scraping folder: ${folder}`);
-    await scrapeFolder(folder);
-    debug('--------------------------------');
-  }
+      if (romFolders.length === 0) {
+        console.log('No ROM folders found');
+        return;
+      }
+
+      for (const folder of romFolders) {
+        debug(`Scraping folder: ${folder}`);
+        await scrapeFolder(folder);
+        debug('--------------------------------');
+      }
+    });
+
+  program.parse(args);
 }
