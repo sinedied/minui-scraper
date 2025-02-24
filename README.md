@@ -15,7 +15,7 @@ Artwork scraper for MinUI.
 - Scrapes boxart for your ROMs, in a MinUI compatible format
 - No account needed, uses [libretro thumbnails](https://github.com/libretro-thumbnails/libretro-thumbnails)
 - Optionally uses local AI with [Ollama](https://ollama.com/) for better boxart matching
-- Fast, about 30s to scrap 1000+ images
+- Fast, ~30s to scrap 1000+ images
 - No configuration needed
 
 ## Installation
