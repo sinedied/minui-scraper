@@ -30,6 +30,7 @@ export async function run(args: string[] = process.argv) {
     .option('--height, -h <size>', 'Max height of the image', Number.parseFloat)
     .option('--ai, -a', 'Use AI for advanced matching', false)
     .option('--ai-model, -m', 'Ollama model to use for AI matching', 'gemma2:2b')
+    .option('--regions, -r <regions>', 'Preferred regions to use for AI matching', 'World,Europe,USA,Japan')
     .option('--force, -f', 'Force scraping over existing images')
     .option('--verbose', 'Show detailed logs')
     .version(packageJson.version, '-v, --version', 'Show current version')

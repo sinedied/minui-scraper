@@ -4,8 +4,9 @@
 - [c] config.json?
 - [x] option: width / height (max)
 - [x] option: skip existing
-- [ ] ai matcher
-- [ ] option: preferred regions (jp, us, eu)
+- [x] ai matcher
+- [x] option: preferred regions (jp, us, eu)
+- [ ] print not exact matches machine/match
 
 ## Maybe
 
