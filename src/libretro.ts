@@ -141,6 +141,7 @@ export async function findArtUrl(
 ): Promise<string | undefined> {
   let arts = machineCache[machine]?.[type];
   if (!arts) {
+    debug(`Fetching arts list for "${machine}" (${type})`);
     const artsPath = `${baseUrl}${machine}/${type}/`;
     const response = await fetch(artsPath);
     const text = await response.text();
