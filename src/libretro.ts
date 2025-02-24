@@ -2,10 +2,11 @@ import path from 'node:path';
 import fs from 'node:fs/promises';
 import createDebug from 'debug';
 import glob from 'fast-glob';
+import { closest } from 'fastest-levenshtein';
 import { resizeImageTo } from './image.js';
 import { type Options } from './options.js';
 
-const debug = createDebug('command');
+const debug = createDebug('libretro');
 
 export type Machine = {
   extensions: string[];
@@ -13,20 +14,16 @@ export type Machine = {
   fallbacks?: string[];
 };
 
-export type MachineCache = Record<
-  string,
-  {
-    boxarts?: string[];
-    snaps?: string[];
-    titles?: string[];
-  }
->;
+export type MachineCache = Record<string, Partial<Record<ArtType, string[]>>>;
+
+export enum ArtType {
+  Boxart = 'Named_Boxarts',
+  Snap = 'Named_Snaps',
+  Title = 'Named_Titles'
+}
 
 const resFolder = '.res';
 const baseUrl = 'https://thumbnails.libretro.com/';
-const boxartPath = 'Named_Boxarts';
-const snapPath = 'Named_Snaps';
-const titlePath = 'Named_Titles';
 const machines: Record<string, Machine> = {
   'Nintendo - Game Boy': {
     extensions: ['gb', 'sgb', 'zip'],
@@ -122,7 +119,7 @@ export async function scrapeFolder(folderPath: string, options: Options = {}) {
     if (!machine) continue;
 
     debug(`Machine: ${machine} (file: ${filePath})`);
-    const boxartUrl = await findBoxartUrl(filePath, machine);
+    const boxartUrl = await findArtUrl(filePath, machine);
     if (boxartUrl) {
       found++;
       debug(`Found boxart URL: "${boxartUrl}"`);
@@ -137,44 +134,66 @@ export async function scrapeFolder(folderPath: string, options: Options = {}) {
   debug('--------------------------------');
 }
 
-export async function findBoxartUrl(filePath: string, machine: string, fallback = true): Promise<string | undefined> {
-  let boxarts = machineCache[machine]?.boxarts;
-  if (!boxarts) {
-    const boxartsPath = `${baseUrl}${machine}/${boxartPath}/`;
-    const response = await fetch(boxartsPath);
+export async function findArtUrl(
+  filePath: string,
+  machine: string,
+  type: ArtType = ArtType.Boxart,
+  fallback = true
+): Promise<string | undefined> {
+  let arts = machineCache[machine]?.[type];
+  if (!arts) {
+    const artsPath = `${baseUrl}${machine}/${type}/`;
+    const response = await fetch(artsPath);
     const text = await response.text();
-    boxarts =
+    arts =
       text
         .match(/<a href="([^"]+)">/g)
         ?.map((a) => a.replace(/<a href="([^"]+)">/, '$1'))
         .map((a) => decodeURIComponent(a)) ?? [];
     machineCache[machine] ??= {};
-    machineCache[machine].boxarts = boxarts;
+    machineCache[machine][type] = arts;
   }
 
   const fileName = path.basename(filePath, path.extname(filePath));
 
   // Try exact match
   const pngName = `${fileName}.png`;
-  if (boxarts.includes(pngName)) {
-    debug(`Found exatct match for "${fileName}"`);
-    return `${baseUrl}${machine}/${boxartPath}/${pngName}`;
+  if (arts.includes(pngName)) {
+    debug(`Found exact match for "${fileName}"`);
+    return `${baseUrl}${machine}/${type}/${pngName}`;
   }
+
+  const findMatch = (name: string) => {
+    const matches = arts.filter((a) => a.includes(name));
+    if (matches.length > 0) {
+      const bestMatch = closest(name, matches);
+      debug(`Found match for "${name}" (file: "${fileName}"): "${bestMatch}"`);
+      return `${baseUrl}${machine}/${type}/${bestMatch}`;
+    }
+
+    return undefined;
+  };
 
   // Try searching after removing (...) and [...] in the name
-  const strippedName = fileName.replaceAll(/(\(.*?\)|\[.*?])/g, '').trim();
-  const matchedArt = boxarts.find((b) => b.includes(strippedName));
-  if (matchedArt) {
-    debug(`Found match for "${strippedName}" after stripping () []`);
-    return `${baseUrl}${machine}/${boxartPath}/${matchedArt}`;
-  }
+  let strippedName = fileName.replaceAll(/(\(.*?\)|\[.*?])/g, '').trim();
+  let match = findMatch(strippedName);
+  if (match) return match;
 
-  if (!fallback) return undefined;
+  // Try searching after removing DX in the name
+  strippedName = strippedName.replaceAll('DX', '').trim();
+  match = findMatch(strippedName);
+  if (match) return match;
+
+  // Try searching after removing substitles in the name
+  strippedName = strippedName.split('-')[0].trim();
+  match = findMatch(strippedName);
+  if (match) return match;
 
   // Try with fallback machines
+  if (!fallback) return undefined;
   const fallbackMachines = machines[machine]?.fallbacks ?? [];
   for (const fallbackMachine of fallbackMachines) {
-    const artUrl = await findBoxartUrl(filePath, fallbackMachine, false);
+    const artUrl = await findArtUrl(filePath, fallbackMachine, type, false);
     if (artUrl) {
       debug(`Found match for "${fileName}" in fallback machine "${fallbackMachine}"`);
       return artUrl;
