@@ -11,6 +11,13 @@ Artwork scraper for MinUI.
 > [!NOTE]
 > MinUI does't officially support it, but still has [some support for it as stated by its author](https://www.reddit.com/r/SBCGaming/comments/1hycyqx/minui_box_art/).
 
+**Features:**
+- Scrapes boxart for your ROMs, in a MinUI compatible format
+- No account needed, uses [libretro thumbnails](https://github.com/libretro-thumbnails/libretro-thumbnails)
+- Optionally uses local AI with [Ollama](https://ollama.com/) for better boxart matching
+- Fast, about 30s to scrap 1000+ images
+- No configuration needed
+
 ## Installation
 
 Requires [Node.js](https://nodejs.org/), and optionally [Ollama](https://ollama.com/) for AI matching.
@@ -27,6 +34,9 @@ To run the scraper, use the following command:
 ```bash
 mscraper <rompath> [options]
 ```
+
+> [!TIP]
+> Max width must be adjusted depending of the device, the default works well for Trimui Brick. For 640x480 devices, try with `--width 150`.
 
 ### Options
 
