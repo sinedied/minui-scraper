@@ -14,7 +14,7 @@
     "build:watch": "tsc -w --sourceMap",
     "lint": "xo",
     "lint:fix": "xo --fix",
-    "test": "xo",
+    "test": "xo && npm run start",
     "clean": "rm -rf lib *.tgz",
     "release:check": "semantic-release --dry-run"
   },
