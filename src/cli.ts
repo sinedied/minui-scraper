@@ -41,6 +41,13 @@ export async function run(args: string[] = process.argv) {
       process.chdir(targetPath);
       const allFolders = await glob(['*'], { onlyDirectories: true });
       const romFolders = allFolders.filter(isRomFolder);
+      const targetFolder = basename(targetPath);
+
+      if (romFolders.length === 0 && isRomFolder(targetFolder)) {
+        debug(`No ROM folders found, but the target folder "${targetFolder}" is a ROM folder`);
+        romFolders.push(targetFolder);
+        process.chdir('..');
+      }
 
       if (romFolders.length === 0) {
         console.info('No ROM folders found');
@@ -60,9 +67,9 @@ export async function run(args: string[] = process.argv) {
 
       for (const folder of romFolders) {
         await scrapeFolder(folder, options);
+        console.info('--------------------------------');
       }
 
-      console.info('--------------------------------');
       console.info(`Scraped ${romFolders.length} folders`);
       console.info(`- ${stats.matches.perfect} perfect matches`);
       console.info(`- ${stats.matches.partial} partial matches`);
