@@ -42,7 +42,7 @@ If a direct match isn't available, use the closest match trying to translate the
 For example, "Pokemon - Version Or (France) (SGB Enhanced)" should match "Pokemon - Gold Version (USA, Europe) (SGB Enhanced) (GB Compatible).png".
 When multiple regions are available, prefer the one that matches the region of the ROM if possible.
 If the region is not available, use this order of preference: ${options.regions}.
-If no match is found, return null.
+If no close match is found, return null.
 
 ## Output
 Answer with JSON using the following format:
@@ -50,7 +50,7 @@ Answer with JSON using the following format:
   "bestMatch": "<best matching candidate>"
 }`;
 
-  const response = await getCompletion(prompt, options.aiModel!);
+  const response = await getCompletion(prompt, options.aiModel);
   debug('AI response:', response);
 
   const bestMatch = response?.bestMatch;
