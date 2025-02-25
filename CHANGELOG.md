@@ -1,3 +1,19 @@
+# [1.2.0](https://github.com/sinedied/minui-scraper/compare/1.1.0...1.2.0) (2025-02-25)
+
+
+### Bug Fixes
+
+* multi-disc with m3u scraping ([4f657bb](https://github.com/sinedied/minui-scraper/commit/4f657bbcab03f1e6e9efba58a484fccafcf523b5))
+* possible psx misdetection ([d654986](https://github.com/sinedied/minui-scraper/commit/d654986ab4ee09d9c744b9043700d1a8864e9fc9))
+* skip individual multi-discs if a m3u is found ([57bab57](https://github.com/sinedied/minui-scraper/commit/57bab572fb4fe3e1c6e02e800bc75cfdbb4b4614))
+
+
+### Features
+
+* add option for composite boxarts ([952947f](https://github.com/sinedied/minui-scraper/commit/952947f6455003ff81db16b0e733aacb39f6ed80))
+* add option to select art type (boxart, snap or title) ([36d6222](https://github.com/sinedied/minui-scraper/commit/36d6222d2e3e18f3abc51e0efd9b35ba23ef7d15))
+* add support  for many additional machines ([94f13cd](https://github.com/sinedied/minui-scraper/commit/94f13cd3d2e4d5716a9ec670a036b0d3cd205ebc))
+
 # [1.1.0](https://github.com/sinedied/minui-scraper/compare/1.0.0...1.1.0) (2025-02-24)
 
 

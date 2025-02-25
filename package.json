@@ -1,7 +1,7 @@
 {
   "name": "minui-scraper",
   "description": "Artwork scraper for MinUI",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "type": "module",
   "repository": {
     "type": "git",
