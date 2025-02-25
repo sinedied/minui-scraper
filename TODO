@@ -1,9 +1,8 @@
 # TODO
 
 - [ ] Readme screenshot of MinUI with boxart
+- [x] add missing machines
+- [ ] option: art type: snap, title, boxart
+- [ ] option: mix art type: boxart + snap, boxart + title (mix1, mix2)
+- [ ] machine detection logic: if no extensions, use folder name + parent machine name
 
-## Maybe
-
-- [ ] option: choose scraper (libretro / screenscraper)
-- [ ] ask api key screenscraper
-- [ ] .env for user/pass if needed
