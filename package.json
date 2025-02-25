@@ -13,12 +13,12 @@
   "exports": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "start": "npm run build && node \"./bin/mscraper.js\" test",
+    "start": "npm run build && node \"./bin/mscraper.js\"",
     "build": "npm run clean -s && tsc",
     "build:watch": "tsc -w --sourceMap",
     "lint": "xo",
     "lint:fix": "xo --fix",
-    "test": "xo && npm run start",
+    "test": "xo && npm run start test",
     "clean": "rm -rf lib *.tgz",
     "release:check": "semantic-release --dry-run"
   },

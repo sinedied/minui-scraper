@@ -1,6 +1,6 @@
-import { mkdir } from "node:fs/promises";
-import path from "node:path";
-import { Jimp } from "jimp";
+import { mkdir } from 'node:fs/promises';
+import path from 'node:path';
+import { Jimp } from 'jimp';
 
 export type Size = {
   width?: number;
@@ -25,14 +25,14 @@ export async function composeImageTo(
   destination: string,
   size?: Size
 ) {
-  try{
+  try {
     const width = size?.width ?? 300;
-    const margin = Math.round(width * 5 / 100);
+    const margin = Math.round((width * 5) / 100);
     const height = size?.height ?? width;
     await mkdir(path.dirname(destination), { recursive: true });
     const image1 = url1 ? await Jimp.read(url1) : undefined;
     const image2 = url2 ? await Jimp.read(url2) : undefined;
-    const image = new Jimp({ width, height, color: 0x00000000 });
+    const image = new Jimp({ width, height, color: 0x00_00_00_00 });
 
     if (image2) {
       const img2Width = image2.bitmap.width >= image2.bitmap.height ? width - margin : undefined;

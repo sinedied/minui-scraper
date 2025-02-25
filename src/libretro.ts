@@ -89,7 +89,7 @@ const machines: Record<string, Machine> = {
     alias: ['32X', 'THIRTYTWOX']
   },
   'Sega - Dreamcast': {
-    extensions: ['dc', 'chd', 'gdi'],
+    extensions: ['dc', 'chd', 'gdi', 'm3u'],
     alias: ['DC', 'Dreamcast']
   },
   'Sega - Mega Drive - Genesis': {
@@ -97,7 +97,7 @@ const machines: Record<string, Machine> = {
     alias: ['MD', 'Mega Drive', 'Genesis']
   },
   'Sega - Mega-CD - Sega CD': {
-    extensions: ['chd', 'iso', 'cue'],
+    extensions: ['chd', 'iso', 'cue', 'm3u'],
     alias: ['Mega CD', 'Sega CD', 'MegaCD', 'SegaCD']
   },
   'Sega - Game Gear': {
@@ -113,12 +113,12 @@ const machines: Record<string, Machine> = {
     alias: ['Saturn']
   },
   'Sony - PlayStation Portable': {
-    extensions: ['iso', 'cso', 'chd'],
+    extensions: ['iso', 'cso', 'chd', 'm3u'],
     alias: ['PSP', 'PlayStation Portable'],
     fallbacks: ['Sony - PlayStation']
   },
   'Sony - PlayStation': {
-    extensions: ['chd', 'cue'],
+    extensions: ['chd', 'cue', 'm3u'],
     alias: ['PS', 'PSX', 'PS1', 'PlayStation']
   },
   'Amstrad - CPC': {
@@ -199,7 +199,7 @@ const machines: Record<string, Machine> = {
     alias: ['INT', 'Intellivision']
   },
   'NEC - PC Engine CD - TurboGrafx-CD': {
-    extensions: ['chd', 'cue'],
+    extensions: ['chd', 'cue', 'm3u'],
     alias: ['PCECD', 'TGCD', 'PC Engine CD', 'TurboGrafx-CD']
   },
   'NEC - PC Engine SuperGrafx': {
@@ -211,7 +211,7 @@ const machines: Record<string, Machine> = {
     alias: ['PCE', 'TG16', 'PC Engine', 'TurboGrafx 16']
   },
   'SNK - Neo Geo CD': {
-    extensions: ['chd', 'cue'],
+    extensions: ['chd', 'cue', 'm3u'],
     alias: ['NEOCD', 'NGCD', 'Neo Geo CD']
   },
   'SNK - Neo Geo Pocket Color': {
@@ -278,7 +278,13 @@ export async function scrapeFolder(folderPath: string, options: Options) {
   const files = await glob(['**/*'], { onlyFiles: true, cwd: folderPath });
 
   for (const file of files) {
-    const filePath = path.join(folderPath, file);
+    const originalFilePath = path.join(folderPath, file);
+    let filePath = originalFilePath;
+    if (filePath.endsWith('.m3u')) {
+      filePath = path.dirname(filePath);
+      debug(`File is m3u, using parent folder for scraping: ${filePath}`);
+    }
+
     const artPath = path.join(path.dirname(filePath), resFolder, `${path.basename(filePath)}.png`);
 
     if ((await pathExists(artPath)) && !options.force) {
@@ -287,14 +293,14 @@ export async function scrapeFolder(folderPath: string, options: Options) {
       continue;
     }
 
-    const machine = getMachine(filePath);
+    const machine = getMachine(originalFilePath);
     if (!machine) continue;
 
     debug(`Machine: ${machine} (file: ${filePath})`);
     const artTypes = getArtTypes(options);
     const art1Url = await findArtUrl(filePath, machine, options, artTypes.art1);
     const art2Url = artTypes.art2 ? await findArtUrl(filePath, machine, options, artTypes.art2) : undefined;
-    if (artTypes.art2 && (art1Url || art2Url)) {
+    if (artTypes.art2 && (art1Url ?? art2Url)) {
       debug(`Found art URL(s): "${art1Url}" / "${art2Url}"`);
       await composeImageTo(art1Url, art2Url, artPath, { width: options.width, height: options.height });
     } else if (art1Url) {

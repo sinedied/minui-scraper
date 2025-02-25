@@ -3,7 +3,7 @@ export enum ArtTypeOption {
   Snap = 'snap',
   Title = 'title',
   BoxAndSnap = 'box+snap',
-  BoxAndTitle = 'box+title',
+  BoxAndTitle = 'box+title'
 }
 
 export type Options = {
