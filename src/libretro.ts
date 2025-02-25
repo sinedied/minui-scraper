@@ -3,7 +3,7 @@ import path from 'node:path';
 import fs from 'node:fs/promises';
 import createDebug from 'debug';
 import glob from 'fast-glob';
-import { resizeImageTo } from './image.js';
+import { composeImageTo, resizeImageTo } from './image.js';
 import { ArtTypeOption, type Options } from './options.js';
 import { findBestMatch } from './matcher.js';
 import { stats } from './stats.js';
@@ -291,10 +291,15 @@ export async function scrapeFolder(folderPath: string, options: Options) {
     if (!machine) continue;
 
     debug(`Machine: ${machine} (file: ${filePath})`);
-    const artUrl = await findArtUrl(filePath, machine, options, getArtType(options));
-    if (artUrl) {
-      debug(`Found art URL: "${artUrl}"`);
-      await resizeImageTo(artUrl, artPath, { width: options.width, height: options.height });
+    const artTypes = getArtTypes(options);
+    const art1Url = await findArtUrl(filePath, machine, options, artTypes.art1);
+    const art2Url = artTypes.art2 ? await findArtUrl(filePath, machine, options, artTypes.art2) : undefined;
+    if (artTypes.art2 && (art1Url || art2Url)) {
+      debug(`Found art URL(s): "${art1Url}" / "${art2Url}"`);
+      await composeImageTo(art1Url, art2Url, artPath, { width: options.width, height: options.height });
+    } else if (art1Url) {
+      debug(`Found art URL: "${art1Url}"`);
+      await resizeImageTo(art1Url, artPath, { width: options.width, height: options.height });
     } else {
       console.info(`No art found for "${filePath}"`);
     }
@@ -387,18 +392,26 @@ export function santizeName(name: string) {
   return name.replaceAll(/[&*/:`<>?|"]/g, '_');
 }
 
-export function getArtType(options: Options) {
+export function getArtTypes(options: Options) {
   switch (options.type) {
     case ArtTypeOption.Boxart: {
-      return ArtType.Boxart;
+      return { art1: ArtType.Boxart };
     }
 
     case ArtTypeOption.Snap: {
-      return ArtType.Snap;
+      return { art1: ArtType.Snap };
     }
 
     case ArtTypeOption.Title: {
-      return ArtType.Title;
+      return { art1: ArtType.Title };
+    }
+
+    case ArtTypeOption.BoxAndSnap: {
+      return { art1: ArtType.Boxart, art2: ArtType.Snap };
+    }
+
+    case ArtTypeOption.BoxAndTitle: {
+      return { art1: ArtType.Boxart, art2: ArtType.Title };
     }
 
     // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
