@@ -42,12 +42,13 @@ mscraper <rompath> [options]
 
 ### Options
 
-- `--width, -w <size>`: Max width of the image (default: 300)
-- `--height, -h <size>`: Max height of the image
-- `--ai, -a`: Use AI for advanced matching (default: false)
-- `--ai-model, -m <name>`: Ollama model to use for AI matching (default: `gemma2:2b`)
-- `--regions, -r <regions>`: Preferred regions to use for AI matching (default: `World,Europe,USA,Japan`)
-- `--force, -f`: Force scraping over existing images
+- `-w, --width <size>`: Max width of the image (default: 300)
+- `-h, --height <size>`: Max height of the image
+- `-t, --type <type>`: Type of image to scrape (can be `boxart`, `snap`, `title`) (default: `boxart`)
+- `-a, --ai`: Use AI for advanced matching (default: false)
+- `-m, --ai-model <name>`: Ollama model to use for AI matching (default: `gemma2:2b`)
+- `-r, --regions <regions>`: Preferred regions to use for AI matching (default: `World,Europe,USA,Japan`)
+- `-f, --force`: Force scraping over existing images
 - `--cleanup`: Removes all scraped images in target folder
 - `--verbose`: Show detailed logs
 - `-v, --version`: Show current version

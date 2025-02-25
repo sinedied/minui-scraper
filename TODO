@@ -1,8 +1,7 @@
 # TODO
 
-- [ ] Readme screenshot of MinUI with boxart
 - [x] add missing machines
-- [ ] option: art type: snap, title, boxart
+- [c] machine detection logic: if no extensions, use folder name + parent machine name?
+- [x] option: art type: snap, title, boxart
 - [ ] option: mix art type: boxart + snap, boxart + title (mix1, mix2)
-- [ ] machine detection logic: if no extensions, use folder name + parent machine name
-
+- [ ] Readme screenshot of MinUI with boxart

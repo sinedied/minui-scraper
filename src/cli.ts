@@ -27,12 +27,13 @@ export async function run(args: string[] = process.argv) {
     .name(basename(process.argv[1]))
     .description(packageJson.description)
     .argument('<rompath>', 'Path to the folder containing the ROMs')
-    .option('--width, -w <size>', 'Max width of the image', Number.parseFloat, 300)
-    .option('--height, -h <size>', 'Max height of the image', Number.parseFloat)
-    .option('--ai, -a', 'Use AI for advanced matching', false)
-    .option('--ai-model, -m <name>', 'Ollama model to use for AI matching', 'gemma2:2b')
-    .option('--regions, -r <regions>', 'Preferred regions to use for AI matching', 'World,Europe,USA,Japan')
-    .option('--force, -f', 'Force scraping over existing images')
+    .option('-w, --width <size>', 'Max width of the image', Number.parseFloat, 300)
+    .option('-h, --height <size>', 'Max height of the image', Number.parseFloat)
+    .option('-t, --type <type>', 'Art type (boxart, snap, title)', 'boxart')
+    .option('-a, --ai', 'Use AI for advanced matching', false)
+    .option('-m, --ai-model <name>', 'Ollama model to use for AI matching', 'gemma2:2b')
+    .option('-r, --regions <regions>', 'Preferred regions to use for AI matching', 'World,Europe,USA,Japan')
+    .option('-f, --force', 'Force scraping over existing images')
     .option('--cleanup', 'Removes all scraped images in target folder')
     .option('--verbose', 'Show detailed logs')
     .version(packageJson.version, '-v, --version', 'Show current version')
@@ -65,7 +66,7 @@ export async function run(args: string[] = process.argv) {
       log('Found ROM folders:', romFolders);
 
       if (options.ai) {
-        const ollama = await checkOllama(options.aiModel!);
+        const ollama = await checkOllama(options.aiModel);
         if (!ollama) {
           process.exitCode = 1;
           return;

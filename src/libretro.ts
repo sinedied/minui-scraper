@@ -1,9 +1,10 @@
+import process from 'node:process';
 import path from 'node:path';
 import fs from 'node:fs/promises';
 import createDebug from 'debug';
 import glob from 'fast-glob';
 import { resizeImageTo } from './image.js';
-import { type Options } from './options.js';
+import { ArtTypeOption, type Options } from './options.js';
 import { findBestMatch } from './matcher.js';
 import { stats } from './stats.js';
 
@@ -185,7 +186,7 @@ const machines: Record<string, Machine> = {
     extensions: ['gp', 'zip'],
     alias: ['GP32', 'GamePark']
   },
-  'MAME': {
+  MAME: {
     extensions: ['zip'],
     alias: ['MAME']
   },
@@ -242,15 +243,15 @@ const machines: Record<string, Machine> = {
     extensions: ['sv', 'zip'],
     alias: ['SV', 'Supervision']
   },
-  'DOS': {
+  DOS: {
     extensions: ['pc', 'dos', 'zip'],
     alias: ['DOS']
   },
-  'DOOM': {
+  DOOM: {
     extensions: ['wad', 'zip'],
     alias: ['WAD']
   },
-  'ScummVM': {
+  ScummVM: {
     extensions: ['scummvm', 'zip'],
     alias: ['SCUMM']
   }
@@ -271,7 +272,7 @@ export function isRomFolder(folderName: string) {
   return aliases.some((alias) => folderName.toLowerCase().includes(alias.toLowerCase()));
 }
 
-export async function scrapeFolder(folderPath: string, options: Options = {}) {
+export async function scrapeFolder(folderPath: string, options: Options) {
   debug('Options:', options);
   console.info(`Scraping folder: ${folderPath} [Detected: ${getMachine(folderPath, true)}]`);
   const files = await glob(['**/*'], { onlyFiles: true, cwd: folderPath });
@@ -290,13 +291,12 @@ export async function scrapeFolder(folderPath: string, options: Options = {}) {
     if (!machine) continue;
 
     debug(`Machine: ${machine} (file: ${filePath})`);
-    const boxartUrl = await findArtUrl(filePath, machine, options);
-    if (boxartUrl) {
-      debug(`Found boxart URL: "${boxartUrl}"`);
-      await resizeImageTo(boxartUrl, artPath, { width: options.width, height: options.height });
+    const artUrl = await findArtUrl(filePath, machine, options, getArtType(options));
+    if (artUrl) {
+      debug(`Found art URL: "${artUrl}"`);
+      await resizeImageTo(artUrl, artPath, { width: options.width, height: options.height });
     } else {
-      debug(`No boxart found for "${filePath}"`);
-      console.info(`No boxart found for "${filePath}"`);
+      console.info(`No art found for "${filePath}"`);
     }
   }
 
@@ -306,7 +306,7 @@ export async function scrapeFolder(folderPath: string, options: Options = {}) {
 export async function findArtUrl(
   filePath: string,
   machine: string,
-  options: Options = {},
+  options: Options,
   type: ArtType = ArtType.Boxart,
   fallback = true
 ): Promise<string | undefined> {
@@ -385,6 +385,28 @@ export async function cleanupResFolder(folderPath: string) {
 
 export function santizeName(name: string) {
   return name.replaceAll(/[&*/:`<>?|"]/g, '_');
+}
+
+export function getArtType(options: Options) {
+  switch (options.type) {
+    case ArtTypeOption.Boxart: {
+      return ArtType.Boxart;
+    }
+
+    case ArtTypeOption.Snap: {
+      return ArtType.Snap;
+    }
+
+    case ArtTypeOption.Title: {
+      return ArtType.Title;
+    }
+
+    // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
+    default: {
+      console.error(`Invalid art type: "${options.type as any}"`);
+      process.exit(1);
+    }
+  }
 }
 
 export async function pathExists(path: string) {
