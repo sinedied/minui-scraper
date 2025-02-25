@@ -283,6 +283,15 @@ export async function scrapeFolder(folderPath: string, options: Options) {
     if (filePath.endsWith('.m3u')) {
       filePath = path.dirname(filePath);
       debug(`File is m3u, using parent folder for scraping: ${filePath}`);
+    } else {
+      // Check if it's a multi-disc, with "Rom Name (Disc 1).any" format,
+      // with a "Rom Name.m3u" in the same folder
+      const baseFilePath = path.join(path.dirname(filePath), path.basename(filePath, path.extname(filePath)));
+      const m3uPath = baseFilePath.replace(/ \(Disc \d+\)$/, '') + '.m3u';
+      if (await pathExists(m3uPath)) {
+        debug(`File is a multi-disc part, skipping: ${filePath}`);
+        continue;
+      }
     }
 
     const artPath = path.join(path.dirname(filePath), resFolder, `${path.basename(filePath)}.png`);

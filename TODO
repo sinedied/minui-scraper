@@ -1,7 +1,2 @@
 # TODO
-- [x] add missing machines
-- [c] machine detection logic: if no extensions, use folder name + parent machine name?
-- [x] option: art type: snap, title, boxart
-- [x] option: mix art type: boxart + snap, boxart + title
-- [ ] fix: multi disk games scraping
 - [ ] Readme screenshots
