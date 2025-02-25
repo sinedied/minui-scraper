@@ -244,18 +244,15 @@ const machines: Record<string, Machine> = {
   },
   'DOS': {
     extensions: ['pc', 'dos', 'zip'],
-    alias: ['DOS'],
-    folders: true
+    alias: ['DOS']
   },
   'DOOM': {
     extensions: ['wad', 'zip'],
-    alias: ['WAD'],
-    folders: true
+    alias: ['WAD']
   },
   'ScummVM': {
     extensions: ['scummvm', 'zip'],
-    alias: ['SCUMM'],
-    folders: true
+    alias: ['SCUMM']
   }
 };
 const aliases = Object.values(machines).flatMap((machine) => machine.alias);
