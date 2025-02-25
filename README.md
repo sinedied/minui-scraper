@@ -20,6 +20,9 @@ Artwork scraper for MinUI.
 ## Installation
 
 Requires [Node.js](https://nodejs.org/), and optionally [Ollama](https://ollama.com/) for AI matching.
+
+This tool works with a Command Line Interface (CLI), and need to be installed and run from a terminal application.
+
 Install the CLI globally with:
 
 ```bash
@@ -28,14 +31,14 @@ npm install -g minui-scraper
 
 ## Usage
 
-To run the scraper, use the following command:
+To run the scraper, open a terminal and use the following command:
 
 ```bash
 mscraper <rompath> [options]
 ```
 
 > [!TIP]
-> Max width must be adjusted depending of the device, the default works well for Trimui Brick. For 640x480 devices, try with `--width 150`.
+> Max width must be adjusted depending of the device, the default works well for Trimui Brick. For 640x480 devices, try with `--width 200`.
 
 ### Options
 
@@ -56,3 +59,62 @@ mscraper myroms --width 300 --ai
 ```
 
 This will scrape the ROMs in the `myroms` folder with a max image width of 300 and using AI for advanced matching.
+
+## Supported Systems
+
+The following systems are supported for scraping:
+- Nintendo - Game Boy Color
+- Nintendo - Game Boy Advance
+- Nintendo - Game Boy
+- Nintendo - Super Nintendo Entertainment System
+- Nintendo - Nintendo 64DD
+- Nintendo - Nintendo 64
+- Nintendo - Family Computer Disk System
+- Nintendo - Nintendo Entertainment System
+- Nintendo - Nintendo DSi
+- Nintendo - Nintendo DS
+- Nintendo - Pokemon Mini
+- Nintendo - Virtual Boy
+- Handheld Electronic Game
+- Sega - 32X
+- Sega - Dreamcast
+- Sega - Mega Drive - Genesis
+- Sega - Mega-CD - Sega CD
+- Sega - Game Gear
+- Sega - Master System - Mark III
+- Sega - Saturn
+- Sony - PlayStation
+- Sony - PlayStation Portable
+- Amstrad - CPC
+- Atari - 2600
+- Atari - 5200
+- Atari - 7800
+- Atari - Jaguar
+- Atari - Lynx
+- Atari - ST
+- Bandai - WonderSwan Color
+- Bandai - WonderSwan
+- Coleco - ColecoVision
+- Commodore - Amiga
+- Commodore - VIC-20
+- Commodore - 64
+- FBNeo - Arcade Games
+- GCE - Vectrex
+- GamePark - GP32
+- MAME
+- Microsoft - MSX
+- Mattel - Intellivision
+- NEC - PC Engine CD - TurboGrafx-CD
+- NEC - PC Engine SuperGrafx
+- NEC - PC Engine - TurboGrafx 16
+- SNK - Neo Geo CD
+- SNK - Neo Geo Pocket Color
+- SNK - Neo Geo Pocket
+- SNK - Neo Geo
+- Magnavox - Odyssey2
+- TIC-80
+- Sharp - X68000
+- Watara - Supervision
+- DOS
+- DOOM
+- ScummVM
