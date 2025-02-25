@@ -47,14 +47,16 @@ export async function run(args: string[] = process.argv) {
         return;
       }
 
-      const allFolders = await glob(['*'], { onlyDirectories: true });
-      const romFolders = allFolders.filter(isRomFolder);
+      let romFolders: string[] = [];
       const targetFolder = basename(targetPath);
-
-      if (romFolders.length === 0 && isRomFolder(targetFolder)) {
-        debug(`No ROM folders found, but the target folder "${targetFolder}" is a ROM folder`);
+      if (isRomFolder(targetFolder)) {
+        debug(`Target folder "${targetFolder}" is a ROM folder`);
         romFolders.push(targetFolder);
         process.chdir('..');
+      } else {
+        const allFolders = await glob(['*'], { onlyDirectories: true });
+        romFolders = allFolders.filter(isRomFolder);
+        debug(`Found ${romFolders.length} ROM folders`);
       }
 
       if (romFolders.length === 0) {
