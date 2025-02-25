@@ -112,14 +112,14 @@ const machines: Record<string, Machine> = {
     extensions: ['chd', 'cue'],
     alias: ['Saturn']
   },
-  'Sony - PlayStation': {
-    extensions: ['chd', 'cue'],
-    alias: ['PSX', 'PS1', 'PlayStation']
-  },
   'Sony - PlayStation Portable': {
     extensions: ['iso', 'cso', 'chd'],
     alias: ['PSP', 'PlayStation Portable'],
     fallbacks: ['Sony - PlayStation']
+  },
+  'Sony - PlayStation': {
+    extensions: ['chd', 'cue'],
+    alias: ['PS', 'PSX', 'PS1', 'PlayStation']
   },
   'Amstrad - CPC': {
     extensions: ['dsk', 'zip'],
