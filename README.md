@@ -6,6 +6,8 @@
 [![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/sindresorhus/xo)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
+<img src="https://raw.githubusercontent.com/sinedied/minui-scraper/refs/heads/main/pic.jpg" alt="picture of a scraped boxart" width="200" align="right">
+
 Artwork scraper for MinUI.
 
 > [!NOTE]
