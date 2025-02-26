@@ -90,6 +90,8 @@ The following systems are supported for scraping:
 - Sega - Game Gear
 - Sega - Master System - Mark III
 - Sega - Saturn
+- Sega - Naomi 2
+- Sega - Naomi
 - Sony - PlayStation
 - Sony - PlayStation Portable
 - Amstrad - CPC
@@ -125,5 +127,6 @@ The following systems are supported for scraping:
 - DOS
 - DOOM
 - ScummVM
+- Atomiswave
 
 </details>
