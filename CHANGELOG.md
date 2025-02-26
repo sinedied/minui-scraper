@@ -1,3 +1,18 @@
+# [1.3.0](https://github.com/sinedied/minui-scraper/compare/1.2.0...1.3.0) (2025-02-26)
+
+
+### Bug Fixes
+
+* height option stretching images ([2fe61e8](https://github.com/sinedied/minui-scraper/commit/2fe61e8a1ebd954d2eba0b6e0fd52cb31e3b3a08))
+* not skipping some multi-disc games ([454b163](https://github.com/sinedied/minui-scraper/commit/454b16382203525b19f95d7d6572bde0c907f96d))
+* rare case when target folder is incorrectly detected as rom folder ([13f04f0](https://github.com/sinedied/minui-scraper/commit/13f04f062cb72283ae3ee1b298f3a17619018fc9))
+* rom folder detection logic ([22791b7](https://github.com/sinedied/minui-scraper/commit/22791b7652928cc1b2bb3dd30bf049670f8b34e8))
+
+
+### Features
+
+* attempt to recover invalid pngs ([8cbd2b7](https://github.com/sinedied/minui-scraper/commit/8cbd2b7699eebf33116e17a7573a2307b8bd3f78))
+
 # [1.2.0](https://github.com/sinedied/minui-scraper/compare/1.1.0...1.2.0) (2025-02-25)
 
 
