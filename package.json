@@ -45,6 +45,7 @@
     "commander": "^13.1.0",
     "debug": "^4.4.0",
     "fast-glob": "^3.3.3",
+    "fast-png": "^6.3.0",
     "fastest-levenshtein": "^1.0.16",
     "jimp": "^1.6.0",
     "ollama": "^0.5.13",

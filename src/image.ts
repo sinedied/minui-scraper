@@ -1,17 +1,39 @@
 import { mkdir } from 'node:fs/promises';
 import path from 'node:path';
 import { Jimp } from 'jimp';
+import { decode, encode } from 'fast-png';
+import createDebug from 'debug';
+
+const debug = createDebug('image');
 
 export type Size = {
   width?: number;
   height?: number;
 };
 
+export async function loadImage(url: string) {
+  try {
+    return await Jimp.read(url);
+  } catch (error_: unknown) {
+    const error = error_ as Error;
+    if (error.message?.includes('unrecognised content at end of stream')) {
+      debug(`Failed to load image from "${url}", trying to fix incorrect PNG...`);
+      const response = await fetch(url);
+      const buffer = await response.arrayBuffer();
+      const png = decode(buffer);
+      const fixedPng = encode(png);
+      return Jimp.read(Buffer.from(fixedPng));
+    }
+
+    throw error;
+  }
+}
+
 export async function resizeImageTo(url: string, destination: string, size?: Size) {
   try {
     const width = size?.width ?? 300;
     const height = size?.height;
-    const image = await Jimp.read(url);
+    const image = await loadImage(url);
     await mkdir(path.dirname(destination), { recursive: true });
     await image.resize({ w: width, h: height }).write(destination as `${string}.${string}`);
   } catch (error: any) {
@@ -30,8 +52,8 @@ export async function composeImageTo(
     const margin = Math.round((width * 5) / 100);
     const height = size?.height ?? width;
     await mkdir(path.dirname(destination), { recursive: true });
-    const image1 = url1 ? await Jimp.read(url1) : undefined;
-    const image2 = url2 ? await Jimp.read(url2) : undefined;
+    const image1 = url1 ? await loadImage(url1) : undefined;
+    const image2 = url2 ? await loadImage(url2) : undefined;
     const image = new Jimp({ width, height, color: 0x00_00_00_00 });
 
     if (image2) {
