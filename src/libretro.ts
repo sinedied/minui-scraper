@@ -269,7 +269,7 @@ export function getMachine(file: string, isFolder = false) {
 }
 
 export function isRomFolder(folderName: string) {
-  return aliases.some((alias) => folderName.toLowerCase().includes(alias.toLowerCase()));
+  return getMachine(folderName, true) !== undefined;
 }
 
 export async function scrapeFolder(folderPath: string, options: Options) {
