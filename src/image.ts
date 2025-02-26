@@ -34,8 +34,11 @@ export async function resizeImageTo(url: string, destination: string, size?: Siz
     const width = size?.width ?? 300;
     const height = size?.height;
     const image = await loadImage(url);
+    const isLargerThanTaller = !height || image.bitmap.width >= image.bitmap.height;
+    const imgWidth = isLargerThanTaller ? width : undefined;
+    const imgHeight = isLargerThanTaller ? undefined : height;
     await mkdir(path.dirname(destination), { recursive: true });
-    await image.resize({ w: width, h: height }).write(destination as `${string}.${string}`);
+    await image.resize({ w: imgWidth!, h: imgHeight }).write(destination as `${string}.${string}`);
   } catch (error: any) {
     console.error(`Failed to download art from "${url}": ${error.message}`);
   }
