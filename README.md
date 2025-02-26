@@ -64,6 +64,10 @@ This will scrape the ROMs in the `myroms` folder with a max image width of 300 a
 ## Supported Systems
 
 The following systems are supported for scraping:
+
+<details>
+<summary>Click to expand</summary>
+
 - Nintendo - Game Boy Color
 - Nintendo - Game Boy Advance
 - Nintendo - Game Boy
@@ -119,3 +123,5 @@ The following systems are supported for scraping:
 - DOS
 - DOOM
 - ScummVM
+
+</details>
