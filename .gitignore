@@ -3,6 +3,5 @@ dist/
 lib/
 .DS_Store
 Thumbs.db
-.env*
-_old*
 /test/**/*.png
+TODO
