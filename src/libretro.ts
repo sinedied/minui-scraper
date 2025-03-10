@@ -26,6 +26,7 @@ export enum ArtType {
 }
 
 const resFolder = '.res';
+const mediaFolder = '.media';
 const baseUrl = 'https://thumbnails.libretro.com/';
 const machines: Record<string, Machine> = {
   'Nintendo - Game Boy Color': {
@@ -293,7 +294,13 @@ export async function scrapeFolder(folderPath: string, options: Options) {
       }
     }
 
-    const artPath = path.join(path.dirname(filePath), resFolder, `${path.basename(filePath)}.png`);
+    let imagesFolder = resFolder;
+    if (options.flavor == 'NextUI') {
+      imagesFolder = mediaFolder;
+      filePath = removeExtension(filePath);
+    }
+
+    const artPath = path.join(path.dirname(filePath), imagesFolder, `${path.basename(filePath)}.png`);
 
     if ((await pathExists(artPath)) && !options.force) {
       debug(`Art file already exists, skipping "${artPath}"`);
@@ -396,14 +403,23 @@ export async function findArtUrl(
   return undefined;
 }
 
-export async function cleanupResFolder(folderPath: string) {
-  const resFolders = await glob([`**/${resFolder}`], { onlyDirectories: true, cwd: folderPath });
-  await Promise.all(resFolders.map(async (resFolder) => fs.rm(resFolder, { recursive: true })));
-  console.info(`Removed ${resFolders.length} ${resFolder} folders`);
+export async function cleanupResFolder(folderPath: string, flavor: string) {
+  let imageFolder = resFolder;
+  if (flavor == 'NextUI') {
+    imageFolder = mediaFolder;
+  }
+  const resFolders = await glob([`**/${imageFolder}`], { onlyDirectories: true, cwd: folderPath });
+  await Promise.all(resFolders.map(async (imageFolder) => fs.rm(imageFolder, { recursive: true })));
+  console.info(`Removed ${resFolders.length} ${imageFolder} folders`);
 }
 
 export function santizeName(name: string) {
   return name.replaceAll(/[&*/:`<>?|"]/g, '_');
+}
+
+export function removeExtension(filename: string) {
+    let lastDotIndex = filename.lastIndexOf('.');
+    return lastDotIndex > 0 ? filename.slice(0, lastDotIndex) : filename;
 }
 
 export function getArtTypes(options: Options) {

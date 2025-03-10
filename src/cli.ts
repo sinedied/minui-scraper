@@ -33,6 +33,7 @@ export async function run(args: string[] = process.argv) {
     .option('-a, --ai', 'Use AI for advanced matching', false)
     .option('-m, --ai-model <name>', 'Ollama model to use for AI matching', 'gemma2:2b')
     .option('-r, --regions <regions>', 'Preferred regions to use for AI matching', 'World,Europe,USA,Japan')
+    .option('-fv, --flavor', 'Custom firmware flavor', 'MinUI')
     .option('-f, --force', 'Force scraping over existing images')
     .option('--cleanup', 'Removes all scraped images in target folder')
     .option('--verbose', 'Show detailed logs')
@@ -43,7 +44,7 @@ export async function run(args: string[] = process.argv) {
       process.chdir(targetPath);
 
       if (options.cleanup) {
-        await cleanupResFolder('.');
+        await cleanupResFolder('.', options.flavor);
         return;
       }
 

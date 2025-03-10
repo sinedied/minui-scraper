@@ -14,5 +14,6 @@ export type Options = {
   ai?: boolean;
   aiModel: string;
   regions: string;
+  flavor: string;
   cleanup?: boolean;
 };
