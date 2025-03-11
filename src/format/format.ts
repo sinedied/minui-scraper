@@ -4,7 +4,8 @@ import { type Options } from '../options.js';
 export enum Format {
   MinUI = 'minui',
   NextUI = 'nextui',
-  MuOS = 'muos'
+  MuOS = 'muos',
+  Anbernic = 'anbernic'
 }
 
 export type SeparateArtworksFunction = (options: Options) => Promise<boolean>;
@@ -42,6 +43,11 @@ export async function getOutputFormat(options: Options): Promise<OutputFormat> {
     case Format.MuOS: {
       const muos = await import('./muos.js');
       return muos.default;
+    }
+
+    case Format.Anbernic: {
+      const anbernic = await import('./anbernic.js');
+      return anbernic.default;
     }
 
     // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check

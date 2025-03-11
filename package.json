@@ -1,6 +1,6 @@
 {
   "name": "multi-scraper",
-  "description": "Artwork scraper for MinUI, NextUI, and MuOS",
+  "description": "Artwork scraper for handheld emulators.",
   "version": "1.3.0",
   "type": "module",
   "repository": {
