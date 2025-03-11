@@ -76,7 +76,7 @@ const machineFolders: Record<string, string | undefined> = {
 const artFolders: Record<ArtType, string> = {
   [ArtType.Boxart]: 'box',
   [ArtType.Snap]: 'preview',
-  [ArtType.Title]: 'splash'
+  [ArtType.Title]: 'preview'
 };
 let volumeRootPath: string | undefined;
 
