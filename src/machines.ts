@@ -207,7 +207,7 @@ export const machines: Record<string, Machine> = {
   },
   'SNK - Neo Geo CD': {
     extensions: ['chd', 'cue', 'm3u'],
-    alias: ['NEOCD', 'NGCD', 'Neo Geo CD'],
+    alias: ['NEOCD', 'NGCD', 'Neo Geo CD']
   },
   'SNK - Neo Geo Pocket Color': {
     extensions: ['ngc', 'zip'],
@@ -251,8 +251,8 @@ export const machines: Record<string, Machine> = {
     extensions: ['scummvm', 'zip'],
     alias: ['SCUMM']
   },
-  'Atomiswave': {
+  Atomiswave: {
     extensions: ['zip'],
     alias: ['Atomiswave']
-  },
+  }
 };

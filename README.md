@@ -47,6 +47,7 @@ mscraper <rompath> [options]
 - `-w, --width <size>`: Max width of the image (default: 300)
 - `-h, --height <size>`: Max height of the image
 - `-t, --type <type>`: Type of image to scrape (can be `boxart`, `snap`, `title`, `box+snap`, `box+title`) (default: `boxart`)
+- `-o, --output <format>`: Artwork format (can be (`minui`, `muos`) (default: `minui`)
 - `-a, --ai`: Use AI for advanced matching (default: false)
 - `-m, --ai-model <name>`: Ollama model to use for AI matching (default: `gemma2:2b`)
 - `-r, --regions <regions>`: Preferred regions to use for AI matching (default: `World,Europe,USA,Japan`)
