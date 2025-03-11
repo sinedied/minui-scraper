@@ -4,6 +4,29 @@
 ### Bug Fixes
 
 * muOS volume root detection ([b552919](https://github.com/sinedied/mini-scraper/commit/b552919b4a42c5fedf89a711c34f0f7097e0b5f6))
+* package publish ([6e7ca08](https://github.com/sinedied/mini-scraper/commit/6e7ca086d9522719c3822d32b760ceb16f2187df))
+
+
+### Features
+
+* add --output option, without muOS support ([7ac002f](https://github.com/sinedied/mini-scraper/commit/7ac002f69d206aa46561b8279478eac7dbf5d9b1))
+* add Naomi and Atomiswave machines ([a50e152](https://github.com/sinedied/mini-scraper/commit/a50e15236d958312aaa82d32107ecc0f92cdf4c1))
+* add support for Anbernic stock OS output format ([2aae6ea](https://github.com/sinedied/mini-scraper/commit/2aae6ea945a9379271c2b801ba70056718b6a649))
+* add support for NextUI output format (closes [#1](https://github.com/sinedied/mini-scraper/issues/1)) ([8c96391](https://github.com/sinedied/mini-scraper/commit/8c963912690871f33fc6275d9a8241832f4b431d))
+* rename project to mini-scraper (due to name conflict) ([a892089](https://github.com/sinedied/mini-scraper/commit/a89208976633767c286cb5c0ea6fcd11050bd0d2))
+* show elapsed time ([287ade2](https://github.com/sinedied/mini-scraper/commit/287ade27379dd95e04b36b8258bd62ea5d971862))
+
+
+### Reverts
+
+* version ([5864911](https://github.com/sinedied/mini-scraper/commit/586491193711dd05c8dd6f7dd4679b3fee54973f))
+
+# [1.4.0](https://github.com/sinedied/mini-scraper/compare/1.3.0...1.4.0) (2025-03-11)
+
+
+### Bug Fixes
+
+* muOS volume root detection ([b552919](https://github.com/sinedied/mini-scraper/commit/b552919b4a42c5fedf89a711c34f0f7097e0b5f6))
 
 
 ### Features
