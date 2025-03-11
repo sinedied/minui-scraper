@@ -1,34 +1,34 @@
-# 🎨 minui-scraper
+# 🎨 multi-scraper
 
-[![NPM version](https://img.shields.io/npm/v/minui-scraper.svg)](https://www.npmjs.com/package/minui-scraper)
-[![Build Status](https://github.com/sinedied/minui-scraper/workflows/build/badge.svg)](https://github.com/sinedied/minui-scraper/actions)
-![Node version](https://img.shields.io/node/v/minui-scraper.svg)
+[![NPM version](https://img.shields.io/npm/v/multi-scraper.svg)](https://www.npmjs.com/package/multi-scraper)
+[![Build Status](https://github.com/sinedied/multi-scraper/workflows/build/badge.svg)](https://github.com/sinedied/multi-scraper/actions)
+![Node version](https://img.shields.io/node/v/multi-scraper.svg)
 [![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/sindresorhus/xo)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-<img src="https://raw.githubusercontent.com/sinedied/minui-scraper/refs/heads/main/pic.jpg" alt="picture of a scraped boxart" width="180" align="right">
+<img src="https://raw.githubusercontent.com/sinedied/multi-scraper/refs/heads/main/pic.jpg" alt="picture of a scraped boxart" width="180" align="right">
 
-Artwork scraper for MinUI.
+Artwork scraper for [MinUI](https://github.com/shauninman/MinUI), [NextUI](https://github.com/LoveRetro/NextUI) and [muOS](https://muos.dev/).
 
 > [!NOTE]
 > MinUI does't officially support boxarts, but still has [some support for it as stated by its author](https://www.reddit.com/r/SBCGaming/comments/1hycyqx/minui_box_art/).
 
 **Features:**
-- Scrapes boxart for your ROMs, in a MinUI compatible format
+- Scrapes boxart for your ROMs, in a compatible format with multiple frontends/OSes
 - No account needed, uses [libretro thumbnails](https://github.com/libretro-thumbnails/libretro-thumbnails)
 - Optionally uses local AI with [Ollama](https://ollama.com/) for better boxart matching
 - No configuration needed
 
 ## Installation
 
-Requires [Node.js](https://nodejs.org/), and optionally [Ollama](https://ollama.com/) for AI matching.
+Requires [Node.js](https://nodejs.org/), and optionally [Ollama](https://ollama.com/) for AI matching. You need to install these to be able to use the scraper.
 
 This tool works with a Command Line Interface (CLI), and need to be installed and run from a terminal application.
 
-Install the CLI globally with:
+Install the CLI globally by opening a terminal and running the following command:
 
 ```bash
-npm install -g minui-scraper
+npm install -g multi-scraper
 ```
 
 ## Usage
@@ -40,14 +40,14 @@ mscraper <rompath> [options]
 ```
 
 > [!TIP]
-> Max width must be adjusted depending of the device, the default works well for Trimui Brick. For 640x480 devices, try with `--width 200`.
+> Max width must be adjusted depending of the device and output format, the default works well for Trimui Brick. For 640x480 devices, try with `--width 200`.
 
 ### Options
 
 - `-w, --width <size>`: Max width of the image (default: 300)
 - `-h, --height <size>`: Max height of the image
 - `-t, --type <type>`: Type of image to scrape (can be `boxart`, `snap`, `title`, `box+snap`, `box+title`) (default: `boxart`)
-- `-o, --output <format>`: Artwork format (can be (`minui`, `muos`) (default: `minui`)
+- `-o, --output <format>`: Artwork format (can be (`minui`, `nextui`, `muos`) (default: `minui`)
 - `-a, --ai`: Use AI for advanced matching (default: false)
 - `-m, --ai-model <name>`: Ollama model to use for AI matching (default: `gemma2:2b`)
 - `-r, --regions <regions>`: Preferred regions to use for AI matching (default: `World,Europe,USA,Japan`)
