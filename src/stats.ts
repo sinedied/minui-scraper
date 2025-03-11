@@ -5,5 +5,6 @@ export const stats = {
     ai: 0,
     none: 0
   },
-  skipped: 0
+  skipped: 0,
+  startTime: 0
 };

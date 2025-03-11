@@ -42,6 +42,7 @@ export async function run(args: string[] = process.argv) {
     .helpCommand(false)
     .allowExcessArguments(false)
     .action(async (targetPath: string, options: Options) => {
+      stats.startTime = Date.now();
       process.chdir(targetPath);
 
       let romFolders: string[] = [];
@@ -83,7 +84,11 @@ export async function run(args: string[] = process.argv) {
         console.info('--------------------------------');
       }
 
-      console.info(`Scraped ${romFolders.length} folders`);
+      const elapsed = Date.now() - stats.startTime;
+      const seconds = Math.floor((elapsed % (1000 * 60)) / 1000);
+      const minutes = Math.floor((elapsed % (1000 * 60 * 60)) / (1000 * 60));
+
+      console.info(`Scraped ${romFolders.length} folders (in ${minutes}m ${seconds}s)`);
       console.info(`- ${stats.matches.perfect} perfect matches`);
       console.info(`- ${stats.matches.partial} partial matches`);
       if (options.ai) console.info(`- ${stats.matches.ai} AI matches`);
