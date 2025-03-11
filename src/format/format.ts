@@ -3,6 +3,7 @@ import { type Options } from '../options.js';
 
 export enum Format {
   MinUI = 'minui',
+  NextUI = 'nextui',
   MuOS = 'muos'
 }
 
@@ -31,6 +32,11 @@ export async function getOutputFormat(options: Options): Promise<OutputFormat> {
     case Format.MinUI: {
       const minui = await import('./minui.js');
       return minui.default;
+    }
+
+    case Format.NextUI: {
+      const nextui = await import('./nextui.js');
+      return nextui.default;
     }
 
     case Format.MuOS: {
