@@ -19,7 +19,6 @@
     "lint": "xo",
     "lint:fix": "xo --fix",
     "test": "xo && npm run start test",
-    "test:muos": "MSCRAPER_ROOT=. npm run start test -- -o muos",
     "clean": "rm -rf lib *.tgz",
     "release:check": "semantic-release --dry-run"
   },

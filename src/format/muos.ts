@@ -78,6 +78,7 @@ const artFolders: Record<ArtType, string> = {
   [ArtType.Snap]: 'preview',
   [ArtType.Title]: 'splash'
 };
+let volumeRootPath: string | undefined;
 
 export async function useSeparateArtworks(_options: Options) {
   return true;
@@ -94,15 +95,13 @@ export async function getArtPath(filePath: string, machine: string, type?: ArtTy
   }
 
   const fileName = path.basename(filePath, path.extname(filePath));
-
-  // Allow to override the root path for testing
-  const root = process.env.MSCRAPER_ROOT ?? '';
+  const root = await findVolumeRoot(filePath);
   return path.join(root, artworkBasePath, machineFolder, artFolders[type], `${fileName}.png`);
 }
 
 export async function exportArtwork(
   art1Url: string | undefined,
-  art2Url: string | undefined,
+  _art2Url: string | undefined,
   artPath: string,
   options: Options
 ) {
@@ -117,6 +116,7 @@ export async function exportArtwork(
 }
 
 export async function cleanupArtwork(targetPath: string, romFolders: string[], _options: Options) {
+  let removed = 0;
   for (const romFolder of romFolders) {
     const machine = getMachine(romFolder, true) ?? '';
     const machineFolder = machineFolders[machine];
@@ -125,11 +125,38 @@ export async function cleanupArtwork(targetPath: string, romFolders: string[], _
       continue;
     }
 
-    // Allow to override the root path for testing
-    const root = process.env.MSCRAPER_ROOT ?? '';
-    const machineArtPath = path.join(targetPath, artworkBasePath, machineFolder);
+    const root = await findVolumeRoot(targetPath);
+    const machineArtPath = path.join(root, artworkBasePath, machineFolder);
     await fs.rm(machineArtPath, { recursive: true });
+    removed++;
   }
+
+  console.info(`Removed ${removed} folders`);
+}
+
+async function findVolumeRoot(targetPath: string) {
+  if (volumeRootPath) {
+    return volumeRootPath;
+  }
+
+  const absolutePath = path.resolve(targetPath);
+  const parts = absolutePath.split(path.sep);
+  for (let i = parts.length; i > 0; i--) {
+    const currentPath = parts.slice(0, i).join(path.sep);
+    const autorunPath = path.join(currentPath, 'autorun.inf');
+    try {
+      await fs.access(autorunPath);
+      volumeRootPath = currentPath;
+      debug(`Found muOS root at "${currentPath}"`);
+      return currentPath;
+    } catch {
+      // Ignore errors
+    }
+  }
+
+  debug(`Could not determine muOS root for "${targetPath}" (looking for autorun.inf)`);
+  volumeRootPath = path.dirname(targetPath);
+  return volumeRootPath;
 }
 
 const muos = {
