@@ -1,11 +1,11 @@
 {
-  "name": "minui-scraper",
-  "description": "Artwork scraper for MinUI",
+  "name": "multi-scraper",
+  "description": "Artwork scraper for MinUI, NextUI, and MuOS",
   "version": "1.3.0",
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sinedied/minui-scraper.git"
+    "url": "https://github.com/sinedied/multi-scraper.git"
   },
   "bin": {
     "mscraper": "bin/mscraper.js"
@@ -19,11 +19,14 @@
     "lint": "xo",
     "lint:fix": "xo --fix",
     "test": "xo && npm run start test",
+    "test:muos": "MSCRAPER_ROOT=. npm run start test -- -o muos",
     "clean": "rm -rf lib *.tgz",
     "release:check": "semantic-release --dry-run"
   },
   "keywords": [
     "minui",
+    "nextui",
+    "muos",
     "scraper",
     "boxart",
     "ai"
@@ -32,9 +35,9 @@
     "name": "Yohan Lasorsa",
     "url": "https://bsky.app/profile/sinedied.bsky.social"
   },
-  "homepage": "https://github.com/sinedied/minui-scraper",
+  "homepage": "https://github.com/sinedied/multi-scraper",
   "bugs": {
-    "url": "https://github.com/sinedied/minui-scraper/issues"
+    "url": "https://github.com/sinedied/multi-scraper/issues"
   },
   "license": "MIT",
   "engines": {
@@ -56,6 +59,7 @@
     "@types/update-notifier": "^6.0.8",
     "semantic-release": "^24.2.3",
     "semantic-release-npm-github": "^5.0.0",
+    "typescript": "^5.8.2",
     "xo": "^0.60.0"
   },
   "release": {
