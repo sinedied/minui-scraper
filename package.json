@@ -92,5 +92,8 @@
   "files": [
     "bin",
     "lib"
-  ]
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }
