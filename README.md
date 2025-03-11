@@ -1,8 +1,8 @@
 # 🎨 mini-scraper
 
-[![NPM version](https://img.shields.io/npm/v/mini-scraper.svg)](https://www.npmjs.com/package/mini-scraper)
+[![NPM version](https://img.shields.io/npm/v/@sinedied/mini-scraper.svg)](https://www.npmjs.com/package/@sinedied/mini-scraper)
 [![Build Status](https://github.com/sinedied/mini-scraper/workflows/build/badge.svg)](https://github.com/sinedied/mini-scraper/actions)
-![Node version](https://img.shields.io/node/v/mini-scraper.svg)
+![Node version](https://img.shields.io/node/v/@sinedied/mini-scraper.svg)
 [![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/sindresorhus/xo)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
@@ -28,7 +28,7 @@ This tool works with a Command Line Interface (CLI), and need to be installed an
 Install the CLI globally by opening a terminal and running the following command:
 
 ```bash
-npm install -g mini-scraper
+npm install -g @sinedied/mini-scraper
 ```
 
 ## Usage
