@@ -1,12 +1,12 @@
-# 🎨 multi-scraper
+# 🎨 mini-scraper
 
-[![NPM version](https://img.shields.io/npm/v/multi-scraper.svg)](https://www.npmjs.com/package/multi-scraper)
-[![Build Status](https://github.com/sinedied/multi-scraper/workflows/build/badge.svg)](https://github.com/sinedied/multi-scraper/actions)
-![Node version](https://img.shields.io/node/v/multi-scraper.svg)
+[![NPM version](https://img.shields.io/npm/v/mini-scraper.svg)](https://www.npmjs.com/package/mini-scraper)
+[![Build Status](https://github.com/sinedied/mini-scraper/workflows/build/badge.svg)](https://github.com/sinedied/mini-scraper/actions)
+![Node version](https://img.shields.io/node/v/mini-scraper.svg)
 [![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/sindresorhus/xo)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-<img src="https://raw.githubusercontent.com/sinedied/multi-scraper/refs/heads/main/pic.jpg" alt="picture of a scraped boxart" width="180" align="right">
+<img src="https://raw.githubusercontent.com/sinedied/mini-scraper/refs/heads/main/pic.jpg" alt="picture of a scraped boxart" width="180" align="right">
 
 Artwork scraper for [MinUI](https://github.com/shauninman/MinUI), [NextUI](https://github.com/LoveRetro/NextUI) and [muOS](https://muos.dev/).
 
@@ -28,7 +28,7 @@ This tool works with a Command Line Interface (CLI), and need to be installed an
 Install the CLI globally by opening a terminal and running the following command:
 
 ```bash
-npm install -g multi-scraper
+npm install -g mini-scraper
 ```
 
 ## Usage

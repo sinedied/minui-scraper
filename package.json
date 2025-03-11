@@ -1,11 +1,11 @@
 {
-  "name": "multi-scraper",
+  "name": "mini-scraper",
   "description": "Artwork scraper for handheld emulators.",
   "version": "1.4.0",
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sinedied/multi-scraper.git"
+    "url": "https://github.com/sinedied/mini-scraper.git"
   },
   "bin": {
     "mscraper": "bin/mscraper.js"
@@ -34,9 +34,9 @@
     "name": "Yohan Lasorsa",
     "url": "https://bsky.app/profile/sinedied.bsky.social"
   },
-  "homepage": "https://github.com/sinedied/multi-scraper",
+  "homepage": "https://github.com/sinedied/mini-scraper",
   "bugs": {
-    "url": "https://github.com/sinedied/multi-scraper/issues"
+    "url": "https://github.com/sinedied/mini-scraper/issues"
   },
   "license": "MIT",
   "engines": {
