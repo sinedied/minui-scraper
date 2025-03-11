@@ -3,23 +3,17 @@ import path from 'node:path';
 import fs from 'node:fs/promises';
 import createDebug from 'debug';
 import glob from 'fast-glob';
-import { composeImageTo, resizeImageTo } from './image.js';
 import { ArtTypeOption, type Options } from './options.js';
 import { findBestMatch } from './matcher.js';
 import { stats } from './stats.js';
 import { machines } from './machines.js';
+import { getOutputFormat } from './format/format.js';
+import { ArtType } from './art.js';
 
 const debug = createDebug('libretro');
 
 export type MachineCache = Record<string, Partial<Record<ArtType, string[]>>>;
 
-export enum ArtType {
-  Boxart = 'Named_Boxarts',
-  Snap = 'Named_Snaps',
-  Title = 'Named_Titles'
-}
-
-const resFolder = '.res';
 const baseUrl = 'https://thumbnails.libretro.com/';
 const machineCache: MachineCache = {};
 
@@ -42,44 +36,75 @@ export async function scrapeFolder(folderPath: string, options: Options) {
   const files = await glob(['**/*'], { onlyFiles: true, cwd: folderPath });
 
   for (const file of files) {
-    const originalFilePath = path.join(folderPath, file);
-    let filePath = originalFilePath;
-    if (filePath.endsWith('.m3u')) {
-      filePath = path.dirname(filePath);
-      debug(`File is m3u, using parent folder for scraping: ${filePath}`);
-    } else {
-      // Check if it's a multi-disc, with "Rom Name (Disc 1).any" format,
-      // with a "Rom Name.m3u" in the same folder
-      const m3uPath = filePath.replace(/ \(Disc \d+\).+$/, '') + '.m3u';
-      if (await pathExists(m3uPath)) {
-        debug(`File is a multi-disc part, skipping: ${filePath}`);
-        continue;
+    try {
+      const originalFilePath = path.join(folderPath, file);
+      let filePath = originalFilePath;
+      if (filePath.endsWith('.m3u')) {
+        filePath = path.dirname(filePath);
+        debug(`File is m3u, using parent folder for scraping: ${filePath}`);
+      } else {
+        // Check if it's a multi-disc, with "Rom Name (Disc 1).any" format,
+        // with a "Rom Name.m3u" in the same folder
+        const m3uPath = filePath.replace(/ \(Disc \d+\).+$/, '') + '.m3u';
+        if (await pathExists(m3uPath)) {
+          debug(`File is a multi-disc part, skipping: ${filePath}`);
+          continue;
+        }
       }
-    }
 
-    const artPath = path.join(path.dirname(filePath), resFolder, `${path.basename(filePath)}.png`);
+      const machine = getMachine(originalFilePath);
+      if (!machine) continue;
 
-    if ((await pathExists(artPath)) && !options.force) {
-      debug(`Art file already exists, skipping "${artPath}"`);
-      stats.skipped++;
-      continue;
-    }
+      const format = await getOutputFormat(options);
 
-    const machine = getMachine(originalFilePath);
-    if (!machine) continue;
+      if (await format.useSeparateArtworks(options)) {
+        const artTypes = getArtTypes(options);
+        const art1Path = await format.getArtPath(originalFilePath, machine, artTypes.art1);
+        if ((await pathExists(art1Path)) && !options.force) {
+          debug(`Art file already exists, skipping "${art1Path}"`);
+          stats.skipped++;
+        } else {
+          debug(`Machine: ${machine} (file: ${filePath})`);
+          const art1Url = await findArtUrl(filePath, machine, options, artTypes.art1);
+          const result = await format.exportArtwork(art1Url, undefined, art1Path, options);
+          if (!result) {
+            console.info(`No art found for "${filePath}"`);
+          }
+        }
 
-    debug(`Machine: ${machine} (file: ${filePath})`);
-    const artTypes = getArtTypes(options);
-    const art1Url = await findArtUrl(filePath, machine, options, artTypes.art1);
-    const art2Url = artTypes.art2 ? await findArtUrl(filePath, machine, options, artTypes.art2) : undefined;
-    if (artTypes.art2 && (art1Url ?? art2Url)) {
-      debug(`Found art URL(s): "${art1Url}" / "${art2Url}"`);
-      await composeImageTo(art1Url, art2Url, artPath, { width: options.width, height: options.height });
-    } else if (art1Url) {
-      debug(`Found art URL: "${art1Url}"`);
-      await resizeImageTo(art1Url, artPath, { width: options.width, height: options.height });
-    } else {
-      console.info(`No art found for "${filePath}"`);
+        const art2Path = artTypes.art2 ? await format.getArtPath(originalFilePath, machine, artTypes.art2) : undefined;
+        if (!art2Path) continue;
+        if ((await pathExists(art2Path)) && !options.force) {
+          debug(`Art file already exists, skipping "${art2Path}"`);
+          stats.skipped++;
+        } else {
+          debug(`Machine: ${machine} (file: ${filePath})`);
+          const art2Url = await findArtUrl(filePath, machine, options, artTypes.art2);
+          const result = await format.exportArtwork(art2Url, undefined, art2Path, options);
+          if (!result) {
+            console.info(`No art found for "${filePath}"`);
+          }
+        }
+      } else {
+        const artPath = await format.getArtPath(originalFilePath, machine);
+        if ((await pathExists(artPath)) && !options.force) {
+          debug(`Art file already exists, skipping "${artPath}"`);
+          stats.skipped++;
+          continue;
+        }
+
+        debug(`Machine: ${machine} (file: ${filePath})`);
+        const artTypes = getArtTypes(options);
+        const art1Url = await findArtUrl(filePath, machine, options, artTypes.art1);
+        const art2Url = artTypes.art2 ? await findArtUrl(filePath, machine, options, artTypes.art2) : undefined;
+        const result = await format.exportArtwork(art1Url, art2Url, artPath, options);
+        if (!result) {
+          console.info(`No art found for "${filePath}"`);
+        }
+      }
+    } catch (_error: unknown) {
+      const error = _error as Error;
+      console.error(`Error while scraping artwork for file "${file}": ${error.message}`);
     }
   }
 
@@ -160,12 +185,6 @@ export async function findArtUrl(
   return undefined;
 }
 
-export async function cleanupResFolder(folderPath: string) {
-  const resFolders = await glob([`**/${resFolder}`], { onlyDirectories: true, cwd: folderPath });
-  await Promise.all(resFolders.map(async (resFolder) => fs.rm(resFolder, { recursive: true })));
-  console.info(`Removed ${resFolders.length} ${resFolder} folders`);
-}
-
 export function santizeName(name: string) {
   return name.replaceAll(/[&*/:`<>?|"]/g, '_');
 }
@@ -200,9 +219,9 @@ export function getArtTypes(options: Options) {
   }
 }
 
-export async function pathExists(path: string) {
+export async function pathExists(targetPath: string) {
   try {
-    await fs.access(path);
+    await fs.access(targetPath);
     return true;
   } catch {
     return false;

@@ -6,10 +6,11 @@ import { program } from 'commander';
 import debug from 'debug';
 import glob from 'fast-glob';
 import updateNotifier from 'update-notifier';
-import { cleanupResFolder, isRomFolder, scrapeFolder } from './libretro.js';
+import { isRomFolder, scrapeFolder } from './libretro.js';
 import { type Options } from './options.js';
 import { checkOllama } from './ollama.js';
 import { stats } from './stats.js';
+import { getOutputFormat } from './format/format.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -30,6 +31,7 @@ export async function run(args: string[] = process.argv) {
     .option('-w, --width <size>', 'Max width of the image', Number.parseFloat, 300)
     .option('-h, --height <size>', 'Max height of the image', Number.parseFloat)
     .option('-t, --type <type>', 'Art type (boxart, snap, title, box+snap, box+title)', 'boxart')
+    .option('-o, --output <format>', 'Artwork format (minui, muos)', 'minui')
     .option('-a, --ai', 'Use AI for advanced matching', false)
     .option('-m, --ai-model <name>', 'Ollama model to use for AI matching', 'gemma2:2b')
     .option('-r, --regions <regions>', 'Preferred regions to use for AI matching', 'World,Europe,USA,Japan')
@@ -41,11 +43,6 @@ export async function run(args: string[] = process.argv) {
     .allowExcessArguments(false)
     .action(async (targetPath: string, options: Options) => {
       process.chdir(targetPath);
-
-      if (options.cleanup) {
-        await cleanupResFolder('.');
-        return;
-      }
 
       let romFolders: string[] = [];
       const targetFolder = basename(targetPath);
@@ -66,6 +63,12 @@ export async function run(args: string[] = process.argv) {
 
       const log = debug('cli');
       log('Found ROM folders:', romFolders);
+
+      if (options.cleanup) {
+        const format = await getOutputFormat(options);
+        await format.cleanupArtwork('.', romFolders, options);
+        return;
+      }
 
       if (options.ai) {
         const ollama = await checkOllama(options.aiModel);
