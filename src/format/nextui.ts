@@ -15,7 +15,8 @@ export async function useSeparateArtworks(_options: Options) {
 }
 
 export async function getArtPath(filePath: string, _machine: string, _type?: ArtType) {
-  return path.join(path.dirname(filePath), mediaFolder, `${path.basename(filePath)}.png`);
+  const fileName = path.basename(filePath, path.extname(filePath));
+  return path.join(path.dirname(filePath), mediaFolder, `${fileName}.png`);
 }
 
 export async function exportArtwork(
