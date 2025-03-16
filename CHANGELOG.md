@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/sinedied/mini-scraper/compare/1.4.0...1.4.1) (2025-03-16)
+
+
+### Bug Fixes
+
+* remove rom extension from nextui images ([a54a675](https://github.com/sinedied/mini-scraper/commit/a54a6758ec9441c0bf3ff312234052d09736a7cc))
+
 # [1.4.0](https://github.com/sinedied/mini-scraper/compare/1.3.0...1.4.0) (2025-03-11)
 
 
