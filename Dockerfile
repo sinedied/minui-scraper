@@ -10,7 +10,7 @@ RUN curl -fsSL https://ollama.com/install.sh | sh
 RUN npm install -g @sinedied/mini-scraper
 
 # Set working directory
-WORKDIR /app
+WORKDIR /roms
 
 # Copy the entrypoint script
 COPY entrypoint.sh /entrypoint.sh
