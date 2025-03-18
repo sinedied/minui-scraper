@@ -59,11 +59,12 @@ docker build -t mini-scraper .
 Then, you can run the scraper with the following command:
 
 ```bash
-docker run -v <rompath>:/roms mini-scraper /roms [options]
+docker run --rm -v <rompath>:/roms mini-scraper /roms [options]
 ```
 
 Explanation:
 
+- `--rm`: This removes the container after it has finished running.
 - `-v <rompath>:/roms`: This mounts your ROMs directory to the /roms directory inside the container.  Replace <rompath> with the actual path to your ROMs.
 - `mini-scraper`: This is the name of the Docker image.
 - `/roms`: This is the directory inside the container where the ROMs are mounted.
