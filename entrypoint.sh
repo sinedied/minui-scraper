@@ -3,6 +3,9 @@
 # Exit on error
 set -e
 
+# Save the arguments
+params=("$@")
+
 # Check if the arguments contain "-a" and get the model name
 model_name="gemma2:2b"
 model_required=false
@@ -31,5 +34,4 @@ if $model_required; then
 fi
 
 # Run mscraper with any provided arguments
-set -- "$@"
-exec mscraper "$@"
+exec mscraper "${params[@]}"

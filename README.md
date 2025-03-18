@@ -19,9 +19,9 @@ Artwork scraper for [MinUI](https://github.com/shauninman/MinUI), [NextUI](https
 - Optionally uses local AI with [Ollama](https://ollama.com/) for better boxart matching
 - No configuration needed
 
-## Installation
+## Getting started
 
-### Local Installation
+### Local
 
 Requires [Node.js](https://nodejs.org/), and optionally [Ollama](https://ollama.com/) for AI matching. You need to install these to be able to use the scraper.
 
@@ -39,7 +39,12 @@ To run the scraper, open a terminal and use the following command:
 mscraper <rompath> [options]
 ```
 
-### Docker Installation
+Explanation:
+
+- `<rompath>`: This is the path to the directory containing your ROMs.
+- `[options]`: Replace this with the command-line arguments to be passed to the scraper.
+
+### Docker
 
 Using the Docker image is the easiest way to run the scraper without needing to install Node.js or Ollama.
 
@@ -63,6 +68,8 @@ Explanation:
 - `[options]`: Replace this with the command-line arguments to be passed to the scraper.
 
 ## Options
+
+When running the scraper, you can pass the following options:
 
 - `-w, --width <size>`: Max width of the image (default: 300)
 - `-h, --height <size>`: Max height of the image
