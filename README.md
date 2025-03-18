@@ -21,7 +21,7 @@ Artwork scraper for [MinUI](https://github.com/shauninman/MinUI), [NextUI](https
 
 ## Getting started
 
-### Local
+### Running Locally
 
 Requires [Node.js](https://nodejs.org/), and optionally [Ollama](https://ollama.com/) for AI matching. You need to install these to be able to use the scraper.
 
@@ -44,11 +44,13 @@ Explanation:
 - `<rompath>`: This is the path to the directory containing your ROMs.
 - `[options]`: Replace this with the command-line arguments to be passed to the scraper.
 
-### Docker
+### Running with Docker
 
 Using the Docker image is the easiest way to run the scraper without needing to install Node.js or Ollama.
 
-Build the Docker image by running the following command:
+Firstly you will need to have Docker installed on your system. You can download and install Docker from the [official website](https://www.docker.com/).
+
+Once this is done build the Docker image by running the following command in the project directory:
 
 ```bash
 docker build -t mini-scraper .
