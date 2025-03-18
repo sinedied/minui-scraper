@@ -12,8 +12,8 @@ WORKDIR /app
 # Copy project files
 COPY . .
 
-# Install dependencies & build the project
-RUN npm ci && npm run build && npm install -g .
+# Install dependencies, build and install the CLI
+RUN npm install && npm run build && npm install -g .
 
 # Copy the entrypoint script
 COPY scripts/entrypoint.sh /entrypoint.sh

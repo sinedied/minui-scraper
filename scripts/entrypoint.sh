@@ -3,12 +3,12 @@
 # Exit on error
 set -e
 
-# Save the arguments
+# Variables
 params=("$@")
-
-# Check if the arguments contain "-a" and get the model name
 model_name="gemma2:2b"
 model_required=false
+
+# Check if AI is required and get the model name
 for arg in "$@"; do
     if [[ "$arg" == "-a" || "$arg" == "--ai" ]]; then
         model_required=true
@@ -18,7 +18,7 @@ for arg in "$@"; do
     shift
 done
 
-# Start Ollama and download the model
+# If AI is required, start Ollama and download the model
 if $model_required; then
     # Start Ollama in the background
     ollama serve &
@@ -33,5 +33,5 @@ if $model_required; then
     ollama pull "$model_name"
 fi
 
-# Run mscraper with any provided arguments
+# Run mscraper with the provided arguments
 exec mscraper "${params[@]}"
