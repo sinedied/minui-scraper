@@ -186,7 +186,7 @@ export async function findArtUrl(
 }
 
 export function santizeName(name: string) {
-  return name.replaceAll(/[&*/:`<>?|"]/g, '_');
+  return name.replace(/^[0-9]+\)\s*/g, '').replaceAll(/[&*/:`<>?|"]/g, '_');
 }
 
 export function getArtTypes(options: Options) {
