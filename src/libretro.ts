@@ -155,9 +155,20 @@ export async function findArtUrl(
   };
 
   const findFuzzyMatch = async (name: string) => {
-    const cosineMatches = arts.filter((a) => stringComparison.cosine.similarity(santizeName(name), a) >= 0.80);
-    const jaroMatches = arts.filter((a) => stringComparison.jaroWinkler.similarity(santizeName(name), a) >= 0.85);
-    const matches = [...cosineMatches, ...jaroMatches].slice(0, 250);
+    const cosineMatches = arts
+      .map((a) => ({ art: a, similarity: stringComparison.cosine.similarity(santizeName(name), a) }))
+      .filter(({ similarity }) => similarity >= 0.80)
+      .sort((a, b) => b.similarity - a.similarity)
+      .slice(0, 25)
+      .map(({ art }) => art);
+    const jaroMatches = arts
+      .map((a) => ({ art: a, similarity: stringComparison.jaroWinkler.similarity(santizeName(name), a) }))
+      .filter(({ similarity }) => similarity >= 0.80)
+      .sort((a, b) => b.similarity - a.similarity)
+      .slice(0, 25)
+      .map(({ art }) => art);
+    console.log(`Num of results: ${cosineMatches.length + jaroMatches.length}`);
+    const matches = [...cosineMatches, ...jaroMatches];
     if (matches.length > 0) {
       const bestMatch = await findBestMatch(name, fileName, matches, options);
       return `${baseUrl}${machine}/${type}/${bestMatch}`;
