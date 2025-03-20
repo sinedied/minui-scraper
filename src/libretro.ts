@@ -167,7 +167,6 @@ export async function findArtUrl(
       .sort((a, b) => b.similarity - a.similarity)
       .slice(0, 25)
       .map(({ art }) => art);
-    console.log(`Num of results: ${cosineMatches.length + jaroMatches.length}`);
     const matches = [...cosineMatches, ...jaroMatches];
     if (matches.length > 0) {
       const bestMatch = await findBestMatch(name, fileName, matches, options);
