@@ -187,7 +187,6 @@ export async function findArtUrl(
   if (match) return match;
 
   // Try searching using findFuzzyMatch
-  strippedName = fileName.replaceAll(/(\(.*?\)|\[.*?])/g, '').trim();
   match = await findFuzzyMatch(strippedName);
   if (match) return match;
 
