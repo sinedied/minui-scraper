@@ -3,6 +3,10 @@ import path from 'node:path';
 import fs from 'node:fs/promises';
 import createDebug from 'debug';
 import glob from 'fast-glob';
+import stringComparison from "string-comparison";
+
+const cosine = stringComparison.cosine;
+const jaroWinkler = stringComparison.jaroWinkler;
 import { ArtTypeOption, type Options } from './options.js';
 import { findBestMatch } from './matcher.js';
 import { stats } from './stats.js';
@@ -153,6 +157,24 @@ export async function findArtUrl(
     return undefined;
   };
 
+
+
+
+  const findFuzzyMatch = async (name: string) => {
+    const cosineMatches = arts.filter((a) => cosine.similarity(santizeName(name), a) >= 0.80);
+    const jaroMatches = arts.filter((a) => jaroWinkler.similarity(santizeName(name), a) >= 0.85);
+    const matches = [...cosineMatches, ...jaroMatches].slice(0, 100);
+    console.log(matches);
+    if (matches.length > 0) {
+      const bestMatch = await findBestMatch(name, fileName, matches, options);
+      return `${baseUrl}${machine}/${type}/${bestMatch}`;
+    }
+
+    return undefined;
+  };
+
+
+
   // Try searching after removing (...) and [...] in the name
   let strippedName = fileName.replaceAll(/(\(.*?\)|\[.*?])/g, '').trim();
   let match = await findMatch(strippedName);
@@ -167,6 +189,12 @@ export async function findArtUrl(
   strippedName = strippedName.split(' - ')[0].trim();
   match = await findMatch(strippedName);
   if (match) return match;
+
+  // Try searching using findFuzzyMatch
+  strippedName = fileName.replaceAll(/(\(.*?\)|\[.*?])/g, '').trim();
+  match = await findFuzzyMatch(strippedName);
+  if (match) return match;
+
 
   // Try with fallback machines
   if (!fallback) return undefined;
