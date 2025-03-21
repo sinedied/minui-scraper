@@ -158,15 +158,15 @@ export async function findArtUrl(
     const strippedArts = arts.map((a) => a.replaceAll(/(\(.*?\)|\[.*?])/g, '').trim());
     const cosineMatches = strippedArts
       .map((a) => ({ art: a, similarity: stringComparison.cosine.similarity(santizeName(name), a) }))
-      .filter(({ similarity }) => similarity >= 0.75)
+      .filter(({ similarity }) => similarity >= 0.80)
       .sort((a, b) => b.similarity - a.similarity)
-      .slice(0, 20)
+      .slice(0, 25)
       .map(({ art }) => art);
     const jaroMatches = strippedArts
       .map((a) => ({ art: a, similarity: stringComparison.jaroWinkler.similarity(santizeName(name), a) }))
       .filter(({ similarity }) => similarity >= 0.75)
       .sort((a, b) => b.similarity - a.similarity)
-      .slice(0, 20)
+      .slice(0, 25)
       .map(({ art }) => art);
       const matches: string[] = [];
       strippedArts.forEach((strippedArt, index) => {
@@ -174,7 +174,6 @@ export async function findArtUrl(
           matches.push(arts[index]);
         }
       });
-    console.log(matches);
     if (matches.length > 0) {
       const bestMatch = await findBestMatch(name, fileName, matches, options);
       return `${baseUrl}${machine}/${type}/${bestMatch}`;
