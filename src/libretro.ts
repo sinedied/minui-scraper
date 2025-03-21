@@ -155,19 +155,26 @@ export async function findArtUrl(
   };
 
   const findFuzzyMatch = async (name: string) => {
-    const cosineMatches = arts
+    const strippedArts = arts.map((a) => a.replaceAll(/(\(.*?\)|\[.*?])/g, '').trim());
+    const cosineMatches = strippedArts
       .map((a) => ({ art: a, similarity: stringComparison.cosine.similarity(santizeName(name), a) }))
-      .filter(({ similarity }) => similarity >= 0.80)
+      .filter(({ similarity }) => similarity >= 0.75)
       .sort((a, b) => b.similarity - a.similarity)
-      .slice(0, 25)
+      .slice(0, 20)
       .map(({ art }) => art);
-    const jaroMatches = arts
+    const jaroMatches = strippedArts
       .map((a) => ({ art: a, similarity: stringComparison.jaroWinkler.similarity(santizeName(name), a) }))
-      .filter(({ similarity }) => similarity >= 0.80)
+      .filter(({ similarity }) => similarity >= 0.75)
       .sort((a, b) => b.similarity - a.similarity)
-      .slice(0, 25)
+      .slice(0, 20)
       .map(({ art }) => art);
-    const matches = [...cosineMatches, ...jaroMatches];
+      const matches: string[] = [];
+      strippedArts.forEach((strippedArt, index) => {
+        if (cosineMatches.includes(strippedArt) || jaroMatches.includes(strippedArt)) {
+          matches.push(arts[index]);
+        }
+      });
+    console.log(matches);
     if (matches.length > 0) {
       const bestMatch = await findBestMatch(name, fileName, matches, options);
       return `${baseUrl}${machine}/${type}/${bestMatch}`;
